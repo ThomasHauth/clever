@@ -11,7 +11,6 @@
 #include <boost/noncopyable.hpp>
 #include <stdexcept>
 
-#include "iopencl.hpp"
 #include "error.hpp"
 
 

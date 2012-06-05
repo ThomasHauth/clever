@@ -69,6 +69,7 @@ class vector: public datatype_base
 {
 public:
 	typedef Type value_type;
+	typedef typename std::vector < Type > stdvector_type;
 
 	static constexpr::size_t value_dim = D;
 	static constexpr::size_t value_elements = D;
@@ -76,7 +77,6 @@ public:
 	// size of one entry ( > one vector ) in bytes
 	static constexpr::size_t value_entry_size = D * sizeof(value_type);
 
-	typedef typename std::vector<Type> VectorType;
 
 	explicit vector(  icontext & c, size_t array_count = 1) :
 				datatype_base(c, array_count)
@@ -84,12 +84,21 @@ public:
 		transfer::create(*this, array_count, c );
 	}
 
-	explicit vector(VectorType const & input,
+
+
+	explicit vector(stdvector_type const & input,
 			size_t array_count, icontext & c) :
 			datatype_base(c, array_count)
 	{
 		transfer::create(*this, input, array_count, c );
 	}
+
+	explicit vector(stdvector_type const & input, icontext & c) :
+			datatype_base(c, input.size())
+	{
+		transfer::create(*this, input, input.size(), c );
+	}
+
 
 	explicit vector(value_type intial_value,
 			size_t array_count,  icontext & c) :
@@ -103,12 +112,12 @@ public:
 
 
 	// TODO: more interfacing here, for example smatrix
-	void to_array(VectorType & arr) const
+	void to_array(stdvector_type & arr) const
 	{
 		transfer::download(*this, arr, get_context() );
 	}
 
-	void from_array(VectorType const& arr) const
+	void from_array(stdvector_type const& arr) const
 	{
 		transfer::upload(*this, arr, get_context() );
 	}

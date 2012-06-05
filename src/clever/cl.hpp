@@ -11,7 +11,6 @@
 #include "cl_libs.h"
 #include "context.hpp"
 #include "kernel.hpp"
-#include "for_each.hpp"
 #include "opencl.hpp"
 #include "types.hpp"
 #include "range.hpp"

@@ -57,7 +57,25 @@ public:
 	context(const context_settings & settings = context_settings()) :
 			m_settings(settings)
 	{
+		init_with_settings( settings );
+	}
 
+	context( std::string platformName, opencl::device_type dev_type,
+			std::string buildProperties = "",
+			cl_command_queue_properties queueSettings = 0,
+			bool profileKernels = false, int threadCount = -1 )
+			{
+				context_settings set (  platformName, dev_type,
+						buildProperties,  profileKernels, queueSettings, threadCount);
+
+				m_settings = set ;
+
+				init_with_settings( set );
+			}
+
+private:
+	void init_with_settings( context_settings const& setttings )
+	{
 		context_ = opencl::createContext(m_settings.m_device_type,
 				m_settings.m_platform_name, m_settings.m_useComputeUnits);
 		::size_t size;
@@ -75,8 +93,11 @@ public:
 
 		ERROR_HANDLER(
 				queue_ = opencl::clCreateCommandQueue( context_, m_devices.get()[ 0 ], m_settings.m_cmd_queue_properties, &ERROR ));
-		// $$$$ 2010-03-09 SILVIN: harcoded on first device
+
 	}
+
+
+public:
 
 	~context()
 	{
@@ -230,6 +251,11 @@ public:
 	{
 		return proxy.execute_params(parameter, context_, queue_, r,
 				reverseParameters);
+	}
+
+	int used_compute_units() const
+	{
+		return m_settings.m_useComputeUnits;
 	}
 
 	void add_profile_event(cl_event evt, std::string evt_name)

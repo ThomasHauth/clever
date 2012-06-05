@@ -19,7 +19,7 @@ namespace clever
 struct platform_query
 {
 	platform_query( std::string platform_name )
-		: m_plaform_name ( platform_name )
+		: m_platform_name ( platform_name )
 	  {
 
 	  }
