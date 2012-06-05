@@ -17,6 +17,8 @@
 
 #include "cl_libs.h"
 
+namespace clever
+{
 
 struct opencl_error
 {
@@ -85,4 +87,7 @@ struct opencl_error
 								  " Error Message: " + serr);  \
     }\
 }
+
+}
+
 

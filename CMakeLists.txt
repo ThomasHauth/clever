@@ -25,7 +25,8 @@ if(CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_CXX_FLAGS "-g -O3 -std=gnu++0x -fopenmp -Wall -Werror -Wfatal-errors -pedantic")
 
 	# most common fallback
-    set(CMAKE_CXX_COMPILER "g++-4.6.2")
+    #set(CMAKE_CXX_COMPILER "g++-4.6.2")
+    set(CMAKE_CXX_COMPILER "/build/gcc/gcc-latest-bin/bin/g++")
 
 endif()
 

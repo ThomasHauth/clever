@@ -1,10 +1,17 @@
+//
+//  Copyright Thomas Hauth, Danilo Piparo 2012
+//
+//  Distributed under the Boost Software License, Version 1.0. (See
+//  accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+
 #pragma once
 
 #include <gtest/gtest.h>
 
 
 #include "../clever.hpp"
-
 
 
 TEST( clever_memory, test_create_destroy_buffer  )
@@ -22,7 +29,6 @@ TEST( clever_memory, test_create_destroy_buffer  )
 }
 
 
-
 TEST( clever_memory, test_transfer_data  )
 {
 	const size_t elements = 10000;
@@ -32,7 +38,6 @@ TEST( clever_memory, test_transfer_data  )
 
 	std::vector <float> float_in ( elements, val );
 	std::vector <float> float_out ( elements, 0.0f );
-
 
 	cl_mem buffer = context.create_buffer (  sizeof(cl_float) * elements );
 

@@ -1,13 +1,12 @@
 //
-//  Copyright Thomas Hauth
+//  Copyright Thomas Hauth, Danilo Piparo 2012
 //
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef OPENCLAM_TRANSFER_HPP_INCLUDED
-#define OPENCLAM_TRANSFER_HPP_INCLUDED
+#pragma once
 
 #include <boost/noncopyable.hpp>
 
@@ -55,27 +54,50 @@ public:
         		NULL, NULL ) );
 	}
 
+	// download from device
 	template < class TObject >
 	static void download( TObject const & handle,
 			std::vector < typename TObject::value_type > & out,
-			icontext & ctx )
+			icontext & ctx,
+			bool synchronous = true)
 	{
 		assert ( ( out.size() / TObject::value_elements ) == handle._count );
 
         ERROR_HANDLER( ERROR = opencl::clEnqueueReadBuffer(
         		ctx.default_queue(),
         		handle.mem_,
-        		CL_TRUE, 0,
-        		handle.value_size * handle._count,
+        		cl_syncmod( synchronous ), 0,
+        		out.size(),
         		&out.front(),
         		0, NULL, NULL ) );
 	}
 
+	// upload to device
+	template < class TObject >
+	static void upload( TObject const & handle,
+			std::vector < typename TObject::value_type > & input,
+			icontext & ctx,
+			bool synchronous = true)
+	{
+		assert ( ( input.size() / TObject::value_elements ) == handle._count );
+
+        ERROR_HANDLER( ERROR = opencl::clEnqueueWriteBuffer( ctx.default_queue(),
+        		handle.mem_, cl_syncmod( synchronous ), 0,
+        		input.size(),
+        		&input.front(),
+        		0, NULL, NULL ) );
+	}
+
+
+	static cl_bool cl_syncmod( bool synchronous )
+	{
+		if ( synchronous )
+			return CL_TRUE;
+		else
+			return CL_FALSE;
+	}
 };
-
-
 
 
 }
 
-#endif // #ifndef OPENCLAM_TRANSFER_HPP_INCLUDED

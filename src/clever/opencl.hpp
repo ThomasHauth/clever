@@ -302,7 +302,7 @@ public:
 			}
 		}
 
-        throw std::runtime_error( "Openclam error: Platform with name " + platformName + " not found." );
+        throw std::runtime_error( "OpenCL error: Platform with name " + platformName + " not found." );
     }
 
     static cl_device_id getDeviceId( std::string platformName = "",

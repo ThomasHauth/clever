@@ -6,8 +6,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef OPENCLAM_ICONTEXT_HPP_INCLUDED
-#define OPENCLAM_ICONTEXT_HPP_INCLUDED
+#pragma once
 
 #include <memory>
 #include <string>
@@ -103,4 +102,3 @@ public:
 };
 }
 
-#endif // #ifndef OPENCLAM_ICONTEXT_HPP_INCLUDED

@@ -1,10 +1,11 @@
 //
-//  Copyright Thomas Hauth
+//  Copyright Thomas Hauth, Danilo Piparo 2012
 //
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
+
 
 #pragma once
 
@@ -17,7 +18,7 @@
 namespace clever
 {
 
-// not one vector, but N vectors alligned in memory
+// not one vector, but N vectors aligned in memory
 template<class Type, unsigned int D>
 class vector: private boost::noncopyable
 {
@@ -58,10 +59,15 @@ public:
 		opencl::clReleaseMemObject(mem_);
 	}
 
-	// more interfacing here, for example smatrix
+	// TODO: more interfacing here, for example smatrix
 	void to_array(VectorType & arr, icontext & c) const
 	{
 		transfer::download(*this, arr, c );
+	}
+
+	void from_array(VectorType & arr, icontext & c) const
+	{
+		transfer::upload(*this, arr, c );
 	}
 
 	// todo: make this with constexpr
@@ -117,6 +123,12 @@ public:
 	void to_array(VectorType & arr, icontext & c) const
 	{
 		transfer::download(*this, arr, c );
+	}
+
+	// more interfacing here, for example smatrix
+	void from_array(VectorType & arr, icontext & c) const
+	{
+		transfer::upload(*this, arr, c );
 	}
 
 	// todo: make this with constexpr

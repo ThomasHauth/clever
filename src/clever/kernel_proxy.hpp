@@ -6,8 +6,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef OPENCLAM_KERNEL_PROXY_HPP_INCLUDED
-#define OPENCLAM_KERNEL_PROXY_HPP_INCLUDED
+#pragma once
 
 #include "opencl.hpp"
 #include "ikernel_proxy.hpp"
@@ -94,5 +93,3 @@ private:
     std::string _kernel_name;
 };
 }
-
-#endif // #ifndef OPENCLAM_CONTEXT_HPP_INCLUDED

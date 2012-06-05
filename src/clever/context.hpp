@@ -214,7 +214,7 @@ public:
 
 			std::cout << std::endl << "Compile error:" << char_out << std::endl;
 			throw std::runtime_error(
-					"Openclam error while compiling kernel " + name);
+					"OpenCL error while compiling kernel " + name);
 		}
 
 		//std::cout << "Compile done" << std::endl;

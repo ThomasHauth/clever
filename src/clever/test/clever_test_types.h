@@ -1,3 +1,11 @@
+//
+//  Copyright Thomas Hauth, Danilo Piparo 2012
+//
+//  Distributed under the Boost Software License, Version 1.0. (See
+//  accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt)
+//
+
 #pragma once
 
 #include <gtest/gtest.h>
@@ -10,43 +18,56 @@ TEST( clever_types, test_vector_type )
 
 	clever::context context;
 
-	typedef clever::vector<double, 10> Vector;
+	typedef clever::vector<double, 10> TestVector;
 
-	std::vector<double> m1_out(count * Vector::value_elements);
-	Vector m1(context, count);
+	std::vector<double> m1_out(count * TestVector::value_elements, 1.0f);
+	std::vector<double> m1_in(count * TestVector::value_elements, 2.0f);
+
+
+	// create clever vector, no initial values given
+	TestVector m1(context, count);
 
 	ASSERT_EQ( m1.range().dimension(), (size_t)1);
 	ASSERT_EQ( m1.range().sizes()[0], (size_t) count);
 	ASSERT_EQ( m1._count, (size_t)count);
 	ASSERT_TRUE(m1.mem_ != NULL);
 
-	m1.to_array(m1_out, context);
-	// can't check m1_out, we did not set any initial value
+	// download values to device
+	m1.from_array(m1_in, context);
+
+	// upload again and check the values
+	m1.to_array( m1_out, context);
+	for (auto const& v : m1_out)
+	{
+		ASSERT_EQ( v, 2.0f);
+	}
 
 	// set initial value here
-	std::vector<double> m2_out(count * Vector::value_elements);
-	Vector m2((double) 1.0f, count, context);
+	std::vector<double> m2_out(count * TestVector::value_elements, 1.0f);
+
+	TestVector m2((double) 23.0f, count, context);
 
 	ASSERT_EQ( m2._count, (size_t)count);
 	ASSERT_TRUE(m2.mem_ != NULL);
 
+	// get the values from OpenCL
 	m2.to_array(m2_out, context);
 	// check the output
 	for (auto const& v : m2_out)
 	{
-		ASSERT_EQ( v, 1.0f);
+		ASSERT_EQ( v, 23.0f);
 	}
 
-	// set initial value here
-	std::vector<double> m3_out(count * Vector::value_elements);
-	std::vector<double> m3_in(count * Vector::value_elements);
+	// set initial value via passing a std::vector
+	std::vector<double> m3_out(count * TestVector::value_elements, 0.0f);
+	std::vector<double> m3_in(count * TestVector::value_elements, 0.0f);
 
 	for (size_t i = 0; i < m3_in.size(); ++i)
 	{
 		m3_in[i] = (double) i;
 	}
 
-	Vector m3(m3_in, count, context);
+	TestVector m3(m3_in, count, context);
 
 	ASSERT_EQ( m3._count, (size_t)count);
 	ASSERT_TRUE(m3.mem_ != NULL);
@@ -64,20 +85,32 @@ TEST( clever_types, test_matrix_type )
 	size_t count = 50;
 	clever::context context;
 
-	typedef clever::matrix<double, 10> Matrix;
+	// define 10x10 matrix
+	typedef clever::matrix<double, 10> TestMatrix;
 
-	std::vector<double> m1_out(count * Matrix::value_elements);
-	Matrix m1( context, count);
+	std::vector<double> m1_in(count * TestMatrix::value_elements, 23.0f);
+	std::vector<double> m1_out(count * TestMatrix::value_elements);
+
+	// don't set initial value but download it later on
+	TestMatrix m1( context, count);
 
 	ASSERT_EQ( m1._count, (size_t)count);
 	ASSERT_TRUE(m1.mem_ != NULL);
 
-	m1.to_array(m1_out, context);
-	// can't check m1_out, we did not set any initial value
+	// download values to device
+	m1.from_array(m1_in, context);
+
+	// upload again and check the values
+	m1.to_array( m1_out, context);
+	for (auto const& v : m1_out)
+	{
+		ASSERT_EQ( v, 23.0f);
+	}
+
 
 	// set initial value here
-	std::vector<double> m2_out(count * Matrix::value_elements);
-	Matrix m2((double) 1.0f, count,  context);
+	std::vector<double> m2_out(count * TestMatrix::value_elements);
+	TestMatrix m2((double) 1.0f, count,  context);
 
 	ASSERT_EQ( m2._count, (size_t)count);
 	ASSERT_TRUE(m2.mem_ != NULL);
@@ -89,16 +122,16 @@ TEST( clever_types, test_matrix_type )
 		ASSERT_EQ( v, 1.0f);
 	}
 
-	// set initial value here
-	std::vector<double> m3_out(count * Matrix::value_elements);
-	std::vector<double> m3_in(count * Matrix::value_elements);
+	// set initial value here, via std::vector
+	std::vector<double> m3_out(count * TestMatrix::value_elements);
+	std::vector<double> m3_in(count * TestMatrix::value_elements);
 
 	for (size_t i = 0; i < m3_in.size(); ++i)
 	{
 		m3_in[i] = (double) i;
 	}
 
-	Matrix m3(m3_in, count,  context);
+	TestMatrix m3(m3_in, count,  context);
 
 	ASSERT_EQ( m3._count, (size_t)count);
 	ASSERT_TRUE(m3.mem_ != NULL);

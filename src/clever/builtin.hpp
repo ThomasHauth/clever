@@ -6,8 +6,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef OPENCLAM_BUILTIN_HPP_INCLUDED
-#define OPENCLAM_BUILTIN_HPP_INCLUDED
+#pragma once
 
 #include <boost/noncopyable.hpp>
 
@@ -32,4 +31,3 @@ protected:
 
 }
 
-#endif // #ifndef OPENCLAM_CONTEXT_HPP_INCLUDED

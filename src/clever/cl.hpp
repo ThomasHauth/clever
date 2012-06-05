@@ -6,8 +6,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef OPENCLAM_CL_HPP_INCLUDED
-#define OPENCLAM_CL_HPP_INCLUDED
+#pragma once
 
 #include "cl_libs.h"
 #include "context.hpp"
@@ -18,4 +17,3 @@
 #include "range.hpp"
 #include "profiling.hpp"
 
-#endif // #ifndef OPENCLAM_KERNEL_HPP_INCLUDED

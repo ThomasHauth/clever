@@ -1,5 +1,5 @@
 //
-//  Copyright Thomas Hauth 2012
+//  Copyright Thomas Hauth, Danilo Piparo 2012
 //
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
@@ -15,7 +15,7 @@
 #include "error.hpp"
 
 
-namespace openclam
+namespace clever
 {
 
 class profiling : public boost::noncopyable
@@ -33,7 +33,7 @@ public:
 
 	double get_mean_runtime( icontext const& context )
 	{
-		openclam::profile_info pinfo;
+		clever::profile_info pinfo;
 		double m = 0.0f;
 		for ( auto & e: m_evts )
 		{
@@ -45,7 +45,7 @@ public:
 
 	double get_mean_timetostart( icontext const& context )
 	{
-		openclam::profile_info pinfo;
+		clever::profile_info pinfo;
 		double m = 0.0f;
 		for ( auto & e: m_evts )
 		{
@@ -59,7 +59,7 @@ public:
 private:
 	std::vector< cl_event> m_evts;
 
-			openclam::profile_info pinfo;
+			clever::profile_info pinfo;
 
 
 

@@ -6,8 +6,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef OPENCLAM_KERNEL_PARAMETER_HPP_INCLUDED
-#define OPENCLAM_KERNEL_PARAMETER_HPP_INCLUDED
+#pragma once
 
 #include <cstring>
 #include <CL/cl.h>
@@ -127,5 +126,3 @@ typedef boost::ptr_vector < kernel_parameter > kernel_parameter_list ;
 
 
 }
-
-#endif // #ifndef OPENCLAM_KERNEL_PARAMETER_HPP_INCLUDED
