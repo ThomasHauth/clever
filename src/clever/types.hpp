@@ -18,9 +18,54 @@
 namespace clever
 {
 
+class datatype_base :  private boost::noncopyable
+{
+public:
+	datatype_base( icontext & context, size_t count )
+	: m_context( context ), m_count( count)
+	{
+
+	}
+
+	size_t get_count() const
+	{
+		return m_count;
+	}
+
+	icontext const& get_context() const
+	{
+		return m_context;
+	}
+
+	cl_mem get_mem() const
+	{
+		return m_mem;
+	}
+
+	void set_mem( cl_mem new_mem )
+	{
+		m_mem = new_mem;
+	}
+
+	~datatype_base()
+	{
+		// free memory
+		// do explicit
+		std::cout << std::endl << "RELEASE";
+		opencl::clReleaseMemObject( get_mem() );
+	}
+
+
+private:
+	icontext & m_context;
+	size_t m_count;
+
+	cl_mem m_mem;
+};
+
 // not one vector, but N vectors aligned in memory
 template<class Type, unsigned int D>
-class vector: private boost::noncopyable
+class vector: public datatype_base
 {
 public:
 	typedef Type value_type;
@@ -34,62 +79,50 @@ public:
 	typedef typename std::vector<Type> VectorType;
 
 	explicit vector(  icontext & c, size_t array_count = 1) :
-			 _count( array_count),
-		 	 m_context( c )
+				datatype_base(c, array_count)
 	{
 		transfer::create(*this, array_count, c );
 	}
 
 	explicit vector(VectorType const & input,
 			size_t array_count, icontext & c) :
-			_count(array_count),
-			m_context( c )
-
+			datatype_base(c, array_count)
 	{
 		transfer::create(*this, input, array_count, c );
 	}
 
 	explicit vector(value_type intial_value,
 			size_t array_count,  icontext & c) :
-			  _count(array_count),
-		 	 m_context( c )
+			datatype_base(c, array_count)
 	{
 		// TODO: could be improved, we have to use this temporary std::vector here
 		std::vector<value_type> vtmp(array_count * value_elements, intial_value);
 		transfer::create(*this, vtmp, array_count, c );
 	}
 
-	~vector()
-	{
-		// free memory
-		// do explicit
-		opencl::clReleaseMemObject(mem_);
-	}
+
 
 	// TODO: more interfacing here, for example smatrix
 	void to_array(VectorType & arr) const
 	{
-		transfer::download(*this, arr, m_context );
+		transfer::download(*this, arr, get_context() );
 	}
 
-	void from_array(VectorType & arr) const
+	void from_array(VectorType const& arr) const
 	{
-		transfer::upload(*this, arr, m_context );
+		transfer::upload(*this, arr, get_context() );
 	}
 
 	// todo: make this with constexpr
 	clever::range range() const
 	{
-		return clever::range(_count);
+		return clever::range( get_count() );
 	}
 
-	cl_mem mem_;
-	size_t _count;
-	icontext & m_context;
 };
 
 template<class Type, unsigned int D>
-class matrix: private boost::noncopyable // can essentially be copied, trying to keep the non-copy sematic as long as possible
+class matrix: public datatype_base
 {
 public:
 	typedef Type value_type;
@@ -102,62 +135,44 @@ public:
 	typedef typename std::vector<Type> VectorType;
 
 	explicit matrix( icontext & c, size_t count = 1) :
-			_count(count)
+			datatype_base( c, count)
 	{
-		transfer::create(*this, count, c );
+		transfer::create(*this, count, get_context() );
 	}
 
 	explicit matrix(VectorType const & input, size_t count,
 			icontext & c) :
-			 _count(count)
+			datatype_base(c, count)
 	{
-		transfer::create(*this, input, count, c );
+		transfer::create(*this, input, count, get_context() );
 	}
 
 	explicit matrix(value_type initial_value, size_t count,
 			icontext & c) :
-			_count(count)
+			datatype_base(c, count)
 	{
 		std::vector<value_type> vtmp(count * value_elements, initial_value);
-		transfer::create(*this, vtmp, count, c );
-	}
-	~matrix()
-	{
-		// free memory
-		// do explicit
-		opencl::clReleaseMemObject(mem_);
+		transfer::create(*this, vtmp, count, get_context() );
 	}
 
 	// more interfacing here, for example smatrix
-	void to_array(VectorType & arr, icontext & c) const
+	void to_array(VectorType & arr) const
 	{
-		transfer::download(*this, arr, c );
+		transfer::download(*this, arr, get_context());
 	}
 
 	// more interfacing here, for example smatrix
-	void from_array(VectorType & arr, icontext & c) const
+	void from_array(VectorType const& arr ) const
 	{
-		transfer::upload(*this, arr, c );
-	}
-
-	// todo: make this with constexpr
-	clever::range range() const
-	{
-		//todo: fix this, must use _count !!
-		assert( false);
-		return clever::range(value_dim, value_dim);
+		transfer::upload(*this, arr, get_context() );
 	}
 
 	clever::range range_linear() const
 	{
-		//todo: fix this, must use _count !!
-		assert( false);
-
-		return clever::range(value_elements);
+		return clever::range( get_count() );
 	}
 
-	cl_mem mem_;
-	size_t _count;
+
 };
 
 }

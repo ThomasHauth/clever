@@ -29,8 +29,8 @@ TEST( clever_types, test_vector_type )
 
 	ASSERT_EQ( m1.range().dimension(), (size_t)1);
 	ASSERT_EQ( m1.range().sizes()[0], (size_t) count);
-	ASSERT_EQ( m1._count, (size_t)count);
-	ASSERT_TRUE(m1.mem_ != NULL);
+	ASSERT_EQ( m1.get_count(), (size_t)count);
+	ASSERT_TRUE(m1.get_mem() != NULL);
 
 	// download values to device
 	m1.from_array( m1_in );
@@ -48,8 +48,8 @@ TEST( clever_types, test_vector_type )
 
 	TestVector m2((double) 23.0f, count, context);
 
-	ASSERT_EQ( m2._count, (size_t)count);
-	ASSERT_TRUE(m2.mem_ != NULL);
+	ASSERT_EQ( m2.get_count(), (size_t)count);
+	ASSERT_TRUE(m2.get_mem() != NULL);
 
 	// get the values from OpenCL
 	m2.to_array( m2_out );
@@ -72,8 +72,8 @@ TEST( clever_types, test_vector_type )
 
 	TestVector m3(m3_in, count, context);
 
-	ASSERT_EQ( m3._count, (size_t)count);
-	ASSERT_TRUE(m3.mem_ != NULL);
+	ASSERT_EQ( m3.get_count(), (size_t)count);
+	ASSERT_TRUE(m3.get_mem() != NULL);
 
 	m3.to_array(m3_out );
 	// check the output
@@ -97,28 +97,27 @@ TEST( clever_types, test_matrix_type )
 	// don't set initial value but download it later on
 	TestMatrix m1( context, count);
 
-	ASSERT_EQ( m1._count, (size_t)count);
-	ASSERT_TRUE(m1.mem_ != NULL);
+	ASSERT_EQ( m1.get_count(), (size_t)count);
+	ASSERT_TRUE(m1.get_mem() != NULL);
 
 	// download values to device
-	m1.from_array(m1_in, context);
+	m1.from_array(m1_in );
 
 	// upload again and check the values
-	m1.to_array( m1_out, context);
+	m1.to_array( m1_out );
 	for (auto const& v : m1_out)
 	{
 		ASSERT_EQ( v, 23.0f);
 	}
 
-
 	// set initial value here
 	std::vector<double> m2_out(count * TestMatrix::value_elements);
 	TestMatrix m2((double) 1.0f, count,  context);
 
-	ASSERT_EQ( m2._count, (size_t)count);
-	ASSERT_TRUE(m2.mem_ != NULL);
+	ASSERT_EQ( m2.get_count(), (size_t)count);
+	ASSERT_TRUE(m2.get_mem() != NULL);
 
-	m2.to_array(m2_out,  context);
+	m2.to_array(m2_out );
 	// check the output
 	for (auto const& v : m2_out)
 	{
@@ -136,10 +135,10 @@ TEST( clever_types, test_matrix_type )
 
 	TestMatrix m3(m3_in, count,  context);
 
-	ASSERT_EQ( m3._count, (size_t)count);
-	ASSERT_TRUE(m3.mem_ != NULL);
+	ASSERT_EQ( m3.get_count(), (size_t)count);
+	ASSERT_TRUE(m3.get_mem() != NULL);
 
-	m3.to_array(m3_out,  context);
+	m3.to_array(m3_out );
 	// check the output
 	for (size_t i = 0; i < m3_out.size(); ++i)
 	{

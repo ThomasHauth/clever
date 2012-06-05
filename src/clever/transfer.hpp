@@ -26,11 +26,11 @@ public:
 	static void create(
 			TObject & handle,
 			size_t count,
-			icontext & ctx)
+			icontext const & ctx)
 	{
-		// TODO : no write here!  write an empty vector for now
-		std::vector < typename TObject::value_type > arr ( TObject::value_elements * count, 0 );
-		create ( handle, arr, count, ctx );
+		ERROR_HANDLER( handle.set_mem ( opencl::clCreateBuffer( ctx.native_context(),
+        		CL_MEM_READ_WRITE, // | CL_MEM_USE_HOST_PTR,
+        		handle.value_entry_size * count, NULL, &ERROR )) );
 	}
 
 	template < class TObject >
@@ -38,19 +38,14 @@ public:
 			TObject & handle,
 			std::vector < typename TObject::value_type > const& input,
 			size_t count,
-			icontext & ctx)
+			icontext const & ctx)
 	{
-		assert ( ( input.size() / TObject::value_elements ) == count );
+		// create buffer
+		create ( handle, count, ctx );
 
-        ERROR_HANDLER( handle.mem_ = opencl::clCreateBuffer( ctx.native_context(),
-        		CL_MEM_READ_WRITE, // | CL_MEM_USE_HOST_PTR,
-        		handle.value_entry_size * count, NULL, &ERROR ) );
-
-        std::cout << std::endl << "created buffer of size "
-        		<< (handle.value_entry_size * count) / 1000.0f << " kB";
-
+		// copy content
         ERROR_HANDLER( ERROR = opencl::clEnqueueWriteBuffer( ctx.default_queue(),
-        		handle.mem_, CL_TRUE, 0, handle.value_entry_size * count, &input.front(), 0,
+        		handle.get_mem() , CL_TRUE, 0, handle.value_entry_size * count, &input.front(), 0,
         		NULL, NULL ) );
 	}
 
@@ -58,16 +53,16 @@ public:
 	template < class TObject >
 	static void download( TObject const & handle,
 			std::vector < typename TObject::value_type > & out,
-			icontext & ctx,
+			icontext const& ctx,
 			bool synchronous = true)
 	{
-		assert ( ( out.size() / TObject::value_elements ) == handle._count );
+		assert ( ( out.size() / TObject::value_elements ) == handle.get_count() );
 
         ERROR_HANDLER( ERROR = opencl::clEnqueueReadBuffer(
         		ctx.default_queue(),
-        		handle.mem_,
+        		handle.get_mem(),
         		cl_syncmod( synchronous ), 0,
-        		handle.value_entry_size * handle._count,
+        		handle.value_entry_size * handle.get_count(),
         		&out.front(),
         		0, NULL, NULL ) );
 	}
@@ -75,17 +70,16 @@ public:
 	// upload to device
 	template < class TObject >
 	static void upload( TObject const & handle,
-			std::vector < typename TObject::value_type > & input,
-			icontext & ctx,
+			std::vector < typename TObject::value_type > const& input,
+			icontext const& ctx,
 			bool synchronous = true)
 	{
-		assert ( ( input.size() / TObject::value_elements ) == handle._count );
+		assert ( ( input.size() / TObject::value_elements ) == handle.get_count() );
 
-		std::cout << std::endl << "Uploading value";
         ERROR_HANDLER( ERROR = opencl::clEnqueueWriteBuffer( ctx.default_queue(),
-        		handle.mem_,
+        		handle.get_mem(),
         		cl_syncmod( synchronous ),0,
-        		handle.value_entry_size * handle._count,
+        		handle.value_entry_size * handle.get_count(),
         		&input.front(),
         		0, NULL, NULL ) );
 	}

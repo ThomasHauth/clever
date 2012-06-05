@@ -15,20 +15,13 @@
 #include <boost/noncopyable.hpp>
 #include <boost/static_assert.hpp>
 
-//#include "types.hpp"
-
-
 namespace clever
 {
 
-class range// : private boost::noncopyable
+class range
 {
 
 public:
-
-	//typedef std::array < ::size_t, 3 > sizes;
-
-
 	explicit range ()
 		: dimension_ ( 0)
 	{

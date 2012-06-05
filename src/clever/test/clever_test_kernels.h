@@ -31,7 +31,7 @@ TEST( clever_kernels, test_run_kernel )
 	}) ( context );
 
 	// run kernel
-	add_val.run( m1.range(), m1.mem_, d2 );
+	add_val.run( m1.range(), m1.get_mem(), d2 );
 
 	// get result
 	m1.to_array( arr );
