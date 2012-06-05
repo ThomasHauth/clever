@@ -16,6 +16,17 @@
 namespace clever
 {
 
+struct platform_query
+{
+	platform_query( std::string platform_name )
+		: m_plaform_name ( platform_name )
+	  {
+
+	  }
+
+	std::string m_platform_name;
+};
+
 class opencl
 {
 public:
@@ -260,7 +271,34 @@ public:
 		return ::clReleaseKernel(clKernel);
 	}
 
-	// ugly stuff by thomas
+
+	static std::vector<platform_query> && query_platforms()
+	{
+		std::vector< platform_query > pis;
+
+		cl_platform_id platforms[10];
+		cl_uint numPlatforms;
+		char char_out[1024];
+		size_t char_out_size = 1024;
+		size_t char_out_final;
+
+		ERROR_HANDLER(
+				ERROR = ::clGetPlatformIDs ( 10, platforms, &numPlatforms ));
+
+		std::cout << "OpenCL Platforms :: " << numPlatforms << " available"
+				<< std::endl;
+
+		for (unsigned int i = 0; i < numPlatforms; ++i)
+		{
+			std::cout << std::endl << "  Platform Id: " << platforms[i]
+			                                                         << std::endl;
+			::clGetPlatformInfo(platforms[i], CL_PLATFORM_NAME, char_out_size,
+					&char_out, &char_out_final);
+
+			pis.push_back( platform_query( char_out ) );
+
+		}
+	}
 
 	static cl_platform_id getPlatformId(std::string platformName = "")
 	{
