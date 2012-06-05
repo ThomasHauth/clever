@@ -27,29 +27,36 @@ public:
 
 	static constexpr::size_t value_dim = D;
 	static constexpr::size_t value_elements = D;
-	static constexpr::size_t value_size = D * sizeof(value_type);
+
+	// size of one entry ( > one vector ) in bytes
+	static constexpr::size_t value_entry_size = D * sizeof(value_type);
 
 	typedef typename std::vector<Type> VectorType;
 
-	explicit vector(  icontext & c, size_t count = 1) :
-			 _count(count)
+	explicit vector(  icontext & c, size_t array_count = 1) :
+			 _count( array_count),
+		 	 m_context( c )
 	{
-		transfer::create(*this, count, c );
+		transfer::create(*this, array_count, c );
 	}
 
-	explicit vector(VectorType const & input, // prototype
-			size_t count, icontext & c) :
-			  _count(count)
+	explicit vector(VectorType const & input,
+			size_t array_count, icontext & c) :
+			_count(array_count),
+			m_context( c )
+
 	{
-		transfer::create(*this, input, count, c );
+		transfer::create(*this, input, array_count, c );
 	}
 
-	explicit vector(value_type intial_value, // prototype
-			size_t count,  icontext & c) :
-			  _count(count)
+	explicit vector(value_type intial_value,
+			size_t array_count,  icontext & c) :
+			  _count(array_count),
+		 	 m_context( c )
 	{
-		std::vector<value_type> vtmp(count * value_elements, intial_value);
-		transfer::create(*this, vtmp, count, c );
+		// TODO: could be improved, we have to use this temporary std::vector here
+		std::vector<value_type> vtmp(array_count * value_elements, intial_value);
+		transfer::create(*this, vtmp, array_count, c );
 	}
 
 	~vector()
@@ -60,14 +67,14 @@ public:
 	}
 
 	// TODO: more interfacing here, for example smatrix
-	void to_array(VectorType & arr, icontext & c) const
+	void to_array(VectorType & arr) const
 	{
-		transfer::download(*this, arr, c );
+		transfer::download(*this, arr, m_context );
 	}
 
-	void from_array(VectorType & arr, icontext & c) const
+	void from_array(VectorType & arr) const
 	{
-		transfer::upload(*this, arr, c );
+		transfer::upload(*this, arr, m_context );
 	}
 
 	// todo: make this with constexpr
@@ -78,6 +85,7 @@ public:
 
 	cl_mem mem_;
 	size_t _count;
+	icontext & m_context;
 };
 
 template<class Type, unsigned int D>
@@ -88,7 +96,8 @@ public:
 
 	static constexpr::size_t value_dim = D;
 	static constexpr::size_t value_elements = D * D;
-	static constexpr::size_t value_size = D * D * sizeof(value_type);
+	// size of one entry ( > one matrix ) in bytes
+	static constexpr::size_t value_entry_size = value_elements * sizeof(value_type);
 
 	typedef typename std::vector<Type> VectorType;
 

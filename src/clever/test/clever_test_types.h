@@ -20,7 +20,7 @@ TEST( clever_types, test_vector_type )
 
 	typedef clever::vector<double, 10> TestVector;
 
-	std::vector<double> m1_out(count * TestVector::value_elements, 1.0f);
+	std::vector<double> m1_out(count * TestVector::value_elements, -1.0f);
 	std::vector<double> m1_in(count * TestVector::value_elements, 2.0f);
 
 
@@ -33,17 +33,18 @@ TEST( clever_types, test_vector_type )
 	ASSERT_TRUE(m1.mem_ != NULL);
 
 	// download values to device
-	m1.from_array(m1_in, context);
+	m1.from_array( m1_in );
 
 	// upload again and check the values
-	m1.to_array( m1_out, context);
+	m1.to_array( m1_out );
+
 	for (auto const& v : m1_out)
 	{
 		ASSERT_EQ( v, 2.0f);
 	}
 
 	// set initial value here
-	std::vector<double> m2_out(count * TestVector::value_elements, 1.0f);
+	std::vector<double> m2_out(count * TestVector::value_elements, -1.0f);
 
 	TestVector m2((double) 23.0f, count, context);
 
@@ -51,7 +52,9 @@ TEST( clever_types, test_vector_type )
 	ASSERT_TRUE(m2.mem_ != NULL);
 
 	// get the values from OpenCL
-	m2.to_array(m2_out, context);
+	m2.to_array( m2_out );
+	context.finish_default_queue();
+
 	// check the output
 	for (auto const& v : m2_out)
 	{
@@ -72,7 +75,7 @@ TEST( clever_types, test_vector_type )
 	ASSERT_EQ( m3._count, (size_t)count);
 	ASSERT_TRUE(m3.mem_ != NULL);
 
-	m3.to_array(m3_out, context);
+	m3.to_array(m3_out );
 	// check the output
 	for (size_t i = 0; i < m3_out.size(); ++i)
 	{

@@ -30,7 +30,7 @@ TEST( clever_runtime, test_default_context  )
 TEST( clever_runtime, test_profile_context  )
 {
 	clever::context_settings cs;
-	cs.profile = true;
+	cs.m_profile = true;
 
 	clever::context context( cs );
 

@@ -20,42 +20,46 @@ namespace clever
 
 struct context_settings
 {
+	context_settings(std::string const& platform_name = "",
+			opencl::device_type device_type = opencl::device_type::default_,
+			std::string build_options = "",
+			bool profile = false,
+			cl_command_queue_properties cmd_queue_properties = 0,
+			int useComputeUnits = -1) :
 
-	context_settings()
+			m_platform_name(platform_name),
+			m_device_type( device_type ),
+			m_build_options(build_options),
+			m_profile(profile),
+			m_cmd_queue_properties( cmd_queue_properties),
+			m_useComputeUnits( useComputeUnits)
 	{
 
 	}
 
-	context_settings(std::string const& platform_name) :
-			m_platform_name(platform_name)
-	{
+	std::string m_platform_name;
+	opencl::device_type m_device_type;
+	std::string m_build_options;
+	bool m_profile;
+	cl_command_queue_properties m_cmd_queue_properties;
+	int m_useComputeUnits;
 
-	}
-
-	std::string m_platform_name = "";
-	opencl::device_type device_type = opencl::device_type::default_;
-	std::string build_options = "";
-	cl_command_queue_properties cmd_queue_properties = 0;
-	bool profile = false;
-	int useComputeUnits = -1;
 };
 
-struct source_modifier : public boost::noncopyable
+struct source_modifier: public boost::noncopyable
 {
-	virtual void modify( std::string & src ) const = 0;
+	virtual void modify(std::string & src) const = 0;
 };
 
-
-
-class context : public clever::icontext
+class context: public clever::icontext
 {
 public:
 	context(const context_settings & settings = context_settings()) :
 			m_settings(settings)
 	{
 
-		context_ = opencl::createContext(m_settings.device_type,
-				m_settings.m_platform_name, m_settings.useComputeUnits);
+		context_ = opencl::createContext(m_settings.m_device_type,
+				m_settings.m_platform_name, m_settings.m_useComputeUnits);
 		::size_t size;
 		ERROR_HANDLER(
 				ERROR = opencl::clGetContextInfo( context_, CL_CONTEXT_DEVICES, 0, NULL, &size ));
@@ -64,13 +68,13 @@ public:
 		ERROR_HANDLER(
 				ERROR = opencl::clGetContextInfo( context_, CL_CONTEXT_DEVICES, size, m_devices.get(), NULL ));
 
-		if (m_settings.profile)
+		if (m_settings.m_profile)
 		{
-			m_settings.cmd_queue_properties |= CL_QUEUE_PROFILING_ENABLE;
+			m_settings.m_cmd_queue_properties |= CL_QUEUE_PROFILING_ENABLE;
 		}
 
 		ERROR_HANDLER(
-				queue_ = opencl::clCreateCommandQueue( context_, m_devices.get()[ 0 ], m_settings.cmd_queue_properties, &ERROR ));
+				queue_ = opencl::clCreateCommandQueue( context_, m_devices.get()[ 0 ], m_settings.m_cmd_queue_properties, &ERROR ));
 		// $$$$ 2010-03-09 SILVIN: harcoded on first device
 	}
 
@@ -85,43 +89,34 @@ public:
 		//std::cout << std::endl << "OpenCL context freed";
 	}
 
-
 	cl_mem create_buffer(size_t buffer_size) const
 	{
 		cl_mem buff;
-        ERROR_HANDLER( buff = opencl::clCreateBuffer( this->native_context(),
-        		CL_MEM_READ_WRITE, // | CL_MEM_USE_HOST_PTR,
-        		buffer_size , NULL, &ERROR ) );
+		ERROR_HANDLER(
+				buff = opencl::clCreateBuffer( this->native_context(), CL_MEM_READ_WRITE, // | CL_MEM_USE_HOST_PTR,
+				buffer_size, NULL, &ERROR ));
 
 		return buff;
 	}
 
-	void release_buffer ( cl_mem memory_handle )
+	void release_buffer(cl_mem memory_handle)
 	{
-		ERROR_HANDLER( ERROR = opencl::clReleaseMemObject( memory_handle ) );
+		ERROR_HANDLER( ERROR = opencl::clReleaseMemObject( memory_handle ));
 	}
 
-
-	void transfer_to_buffer( cl_mem buffer_handle,
-			void * buffer_data, size_t buffer_size ) const
+	void transfer_to_buffer(cl_mem buffer_handle, void * buffer_data,
+			size_t buffer_size) const
 	{
-        ERROR_HANDLER( ERROR = opencl::clEnqueueReadBuffer(
-        		this->default_queue(),
-        		buffer_handle,
-        		CL_TRUE, 0,
-        		buffer_size,
-        		buffer_data,
-        		0, NULL, NULL ) );
+		ERROR_HANDLER(
+				ERROR = opencl::clEnqueueReadBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, 0, NULL, NULL ));
 	}
 
-	void transfer_from_buffer( cl_mem buffer_handle,
-			void * buffer_data,  size_t buffer_size ) const
+	void transfer_from_buffer(cl_mem buffer_handle, void * buffer_data,
+			size_t buffer_size) const
 	{
-		ERROR_HANDLER( ERROR = opencl::clEnqueueWriteBuffer( this->default_queue(),
-								buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, 0,
-								NULL, NULL ) );
+		ERROR_HANDLER(
+				ERROR = opencl::clEnqueueWriteBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, 0, NULL, NULL ));
 	}
-
 
 	/*    virtual cl_mem download_buffer( cl_mem buffer, size_t size ) const = 0;
 
@@ -147,7 +142,7 @@ public:
 		//boost::replace_all( local_sources, ",", ",\n" );
 
 		if ((m_settings.m_platform_name == opencl::PlatformNameAMD())
-				&& (m_settings.device_type == opencl::gpu))
+				&& (m_settings.m_device_type == opencl::gpu))
 		{
 			// special dbl precision floating point flag for AMD GPUs
 			final_source << "#pragma OPENCL EXTENSION cl_amd_fp64: enable"
@@ -229,8 +224,6 @@ public:
 		ERROR_HANDLER( ERROR = opencl::clFinish( default_queue() ));
 	}
 
-
-
 	cl_event execute_params(kernel_parameter_list const& parameter,
 			const clever::ikernel_proxy& proxy, const clever::range & r,
 			const bool reverseParameters = false) const
@@ -244,14 +237,14 @@ public:
 
 	}
 
-	void add_source_modifier( source_modifier * mod )
+	void add_source_modifier(source_modifier * mod)
 	{
-		m_source_modifier.push_back( mod );
+		m_source_modifier.push_back(mod);
 	}
 
 	bool is_profile() const
 	{
-		return m_settings.profile;
+		return m_settings.m_profile;
 	}
 
 	void report_profile(cl_event ev, profile_info & pinfo) const
@@ -294,7 +287,7 @@ private:
 
 	std::auto_ptr<cl_device_id> m_devices;
 
-	boost::ptr_vector< source_modifier > m_source_modifier;
+	boost::ptr_vector<source_modifier> m_source_modifier;
 };
 
 }

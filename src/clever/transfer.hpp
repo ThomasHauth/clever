@@ -28,7 +28,7 @@ public:
 			size_t count,
 			icontext & ctx)
 	{
-		// write an empty vector for now
+		// TODO : no write here!  write an empty vector for now
 		std::vector < typename TObject::value_type > arr ( TObject::value_elements * count, 0 );
 		create ( handle, arr, count, ctx );
 	}
@@ -44,13 +44,13 @@ public:
 
         ERROR_HANDLER( handle.mem_ = opencl::clCreateBuffer( ctx.native_context(),
         		CL_MEM_READ_WRITE, // | CL_MEM_USE_HOST_PTR,
-        		handle.value_size * count, NULL, &ERROR ) );
+        		handle.value_entry_size * count, NULL, &ERROR ) );
 
         std::cout << std::endl << "created buffer of size "
-        		<< (handle.value_size * count) / 1000.0f << " kB";
+        		<< (handle.value_entry_size * count) / 1000.0f << " kB";
 
         ERROR_HANDLER( ERROR = opencl::clEnqueueWriteBuffer( ctx.default_queue(),
-        		handle.mem_, CL_TRUE, 0, handle.value_size * count, &input.front(), 0,
+        		handle.mem_, CL_TRUE, 0, handle.value_entry_size * count, &input.front(), 0,
         		NULL, NULL ) );
 	}
 
@@ -67,7 +67,7 @@ public:
         		ctx.default_queue(),
         		handle.mem_,
         		cl_syncmod( synchronous ), 0,
-        		out.size(),
+        		handle.value_entry_size * handle._count,
         		&out.front(),
         		0, NULL, NULL ) );
 	}
@@ -81,9 +81,11 @@ public:
 	{
 		assert ( ( input.size() / TObject::value_elements ) == handle._count );
 
+		std::cout << std::endl << "Uploading value";
         ERROR_HANDLER( ERROR = opencl::clEnqueueWriteBuffer( ctx.default_queue(),
-        		handle.mem_, cl_syncmod( synchronous ), 0,
-        		input.size(),
+        		handle.mem_,
+        		cl_syncmod( synchronous ),0,
+        		handle.value_entry_size * handle._count,
         		&input.front(),
         		0, NULL, NULL ) );
 	}

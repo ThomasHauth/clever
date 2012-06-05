@@ -23,7 +23,7 @@ TEST( clever_runtime_intel, test_default_context  )
 TEST( clever_runtime_intel, test_profile_context  )
 {
 	clever::context_settings cs ( clever::opencl::PlatformNameIntel( ) );
-	cs.profile = true;
+	cs.m_profile = true;
 
 	clever::context context(  cs );
 
