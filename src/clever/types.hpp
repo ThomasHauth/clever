@@ -54,11 +54,8 @@ public:
 	~vector()
 	{
 		// free memory
-		// do expclicit
+		// do explicit
 		opencl::clReleaseMemObject(mem_);
-		/*std::cout << std::endl << "released buffer of size "
-				<< (value_size * _count) / 1000.0f << " kB";*/
-
 	}
 
 	// more interfacing here, for example smatrix
@@ -112,10 +109,8 @@ public:
 	~matrix()
 	{
 		// free memory
-		// do expclicit
+		// do explicit
 		opencl::clReleaseMemObject(mem_);
-/*		std::cout << std::endl << "released buffer of size "
-				<< (value_size * _count) / 1000.0f << " kB";*/
 	}
 
 	// more interfacing here, for example smatrix

@@ -40,6 +40,13 @@ struct context_settings
 	int useComputeUnits = -1;
 };
 
+struct source_modifier : public boost::noncopyable
+{
+	virtual void modify( std::string & src ) const = 0;
+};
+
+
+
 class context : public clever::icontext
 {
 public:
@@ -237,6 +244,11 @@ public:
 
 	}
 
+	void add_source_modifier( source_modifier * mod )
+	{
+		m_source_modifier.push_back( mod );
+	}
+
 	bool is_profile() const
 	{
 		return m_settings.profile;
@@ -282,6 +294,7 @@ private:
 
 	std::auto_ptr<cl_device_id> m_devices;
 
+	boost::ptr_vector< source_modifier > m_source_modifier;
 };
 
 }

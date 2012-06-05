@@ -390,45 +390,6 @@ public:
 
 			}
 
-			/*
-			std::string pName;
-			std::string pVend;
-			std::string pExt;
-			std::string pVersion;
-			std::string pProfile;
-
-			p.getInfo ( CL_PLATFORM_NAME , &pName );
-			p.getInfo ( CL_PLATFORM_VENDOR , &pVend );
-			p.getInfo ( CL_PLATFORM_EXTENSIONS , &pExt );
-			p.getInfo ( CL_PLATFORM_VERSION , &pVersion );
-			p.getInfo ( CL_PLATFORM_PROFILE , &pProfile );
-
-			std::cout << "Name: " << pName << "  Version: " << pVersion << std::endl;
-			std::cout << "Vendor: " << pVend << std::endl;
-			std::cout << "Profile: " << pProfile << std::endl;
-			std::cout << "Extensions: " << pExt << std::endl;
-
-			VECTOR_CLASS < cl::Device > devices;
-
-			p.getDevices( CL_DEVICE_TYPE_ALL, & devices );
-
-			std::cout<< std::endl << "Devices :: " << std::endl;
-
-			for ( auto d : devices )
-			{
-				std::string dName, dProfile, dVersion, dVersionCL, dExt;
-
-				d.getInfo( CL_DEVICE_NAME, &dName );
-				d.getInfo( CL_DEVICE_PROFILE, &dProfile );
-				d.getInfo( CL_DEVICE_VERSION, &dVersion);
-				d.getInfo( CL_DEVICE_OPENCL_C_VERSION, &dVersionCL);
-				d.getInfo ( CL_DEVICE_EXTENSIONS , &dExt );
-
-				std::cout << "Device Name: " << dName << "  Version: " << dVersion << std::endl;
-				std::cout << "Device Profile: " << dProfile << std::endl;
-				std::cout << "Device OpenCL Version: " << dVersionCL << std::endl;
-				std::cout << "Device Extensions: " << dExt << std::endl;
-			}*/
 		}
 	}
 
