@@ -17,13 +17,13 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
-namespace openclam
+namespace clever
 {
 template< typename T >
-class kernel_base : protected openclam::builtin
+class kernel_base : protected clever::builtin
 {
 public:
-    kernel_base( const std::string& name, const openclam::icontext& context, const std::string& sources )
+    kernel_base( const std::string& name, const clever::icontext& context, const std::string& sources )
         : context_( context )
         , kernel_ ( context.create( name, sources ) )
     {
@@ -33,15 +33,12 @@ public:
     {
         // NOTHING
     }
-    void operator()( T* data, ::size_t size )
-    {
-        context_.execute( data, sizeof( T ) * size, *kernel_ );
-    }
+
 protected:
     boost::function< void( T* ) > f_;
 private:
-    const openclam::icontext& context_;
-    std::unique_ptr< openclam::ikernel_proxy > kernel_;
+    const clever::icontext& context_;
+    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -59,10 +56,10 @@ int  param ( kernel_parameter_list & paramlist,  TParam  & p )
 
 // yes, yes, yes, variadic templates ! This is the new shit !
 template< typename... TArgs >
-class kernel_base_var : protected openclam::builtin
+class kernel_base_var : protected clever::builtin
 {
 public:
-    kernel_base_var( const std::string& name, const openclam::icontext& context, const std::string& sources )
+    kernel_base_var( const std::string& name, const clever::icontext& context, const std::string& sources )
         : context_( context )
         , kernel_ ( context.create( name, sources ) )
     {
@@ -102,8 +99,8 @@ public:
 protected:
     //boost::function< void( T* ) > f_;
 private:
-    const openclam::icontext& context_;
-    std::unique_ptr< openclam::ikernel_proxy > kernel_;
+    const clever::icontext& context_;
+    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -111,11 +108,11 @@ private:
 
 // still some problems with the boost :: bind stuff
 #define APPLY_DEFINES2_CLASS(  NAME,  TYPE1, TYPE2,  FUNCTION, SOURCES )             \
-class NAME##_CLASS : public openclam::kernel_base_var< TYPE1, TYPE2 >                   \
+class NAME##_CLASS : public clever::kernel_base_var< TYPE1, TYPE2 >                   \
 {                                                                           \
 public:                                                                     \
-    explicit NAME##_CLASS( const openclam::icontext& context )              \
-                : openclam::kernel_base_var< TYPE1, TYPE2 >( #NAME, context, SOURCES )  \
+    explicit NAME##_CLASS( const clever::icontext& context )              \
+                : clever::kernel_base_var< TYPE1, TYPE2 >( #NAME, context, SOURCES )  \
              {                                                              \
              }                                                              \
     virtual ~NAME##_CLASS() {}                                              \
@@ -129,10 +126,10 @@ APPLY_DEFINES2_CLASS(  NAME,  TYPE1, TYPE2, FUNCTION, #FUNCTION )
 
 
 template< typename T1, typename T2 >
-class kernel_base2 : protected openclam::builtin
+class kernel_base2 : protected clever::builtin
 {
 public:
-    kernel_base2( const std::string& name, const openclam::icontext& context, const std::string& sources )
+    kernel_base2( const std::string& name, const clever::icontext& context, const std::string& sources )
         : context_( context )
         , kernel_ ( context.create( name, sources ) )
     {
@@ -170,15 +167,15 @@ public:
 protected:
     //boost::function< void( T1 , T2 ) > f_;
 private:
-    const openclam::icontext& context_;
-    std::unique_ptr< openclam::ikernel_proxy > kernel_;
+    const clever::icontext& context_;
+    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 template< typename T1, typename T2,  typename T3 >
-class kernel_base3 : protected openclam::builtin
+class kernel_base3 : protected clever::builtin
 {
 public:
-    kernel_base3( const std::string& name, const openclam::icontext& context, const std::string& sources )
+    kernel_base3( const std::string& name, const clever::icontext& context, const std::string& sources )
         : context_( context )
         , kernel_ ( context.create( name, sources ) )
     {
@@ -207,17 +204,17 @@ public:
 protected:
     //boost::function< void( T1 , T2 ) > f_;
 private:
-    const openclam::icontext& context_;
-    std::unique_ptr< openclam::ikernel_proxy > kernel_;
+    const clever::icontext& context_;
+    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
 
 template< typename T1, typename T2,  typename T3, typename T4 >
-class kernel_base4 : protected openclam::builtin
+class kernel_base4 : protected clever::builtin
 {
 public:
-    kernel_base4( const std::string& name, const openclam::icontext& context, const std::string& sources )
+    kernel_base4( const std::string& name, const clever::icontext& context, const std::string& sources )
         : context_( context )
         , kernel_ ( context.create( name, sources ) )
     {
@@ -252,16 +249,16 @@ public:
 protected:
     //boost::function< void( T1 , T2 ) > f_;
 private:
-    const openclam::icontext& context_;
-    std::unique_ptr< openclam::ikernel_proxy > kernel_;
+    const clever::icontext& context_;
+    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
 template< typename T1, typename T2,  typename T3, typename T4, typename T5 >
-class kernel_base5 : protected openclam::builtin
+class kernel_base5 : protected clever::builtin
 {
 public:
-    kernel_base5( const std::string& name, const openclam::icontext& context, const std::string& sources )
+    kernel_base5( const std::string& name, const clever::icontext& context, const std::string& sources )
         : context_( context )
         , kernel_ ( context.create( name, sources ) )
     {
@@ -305,8 +302,8 @@ public:
 protected:
     //boost::function< void( T1 , T2 ) > f_;
 private:
-    const openclam::icontext& context_;
-    std::unique_ptr< openclam::ikernel_proxy > kernel_;
+    const clever::icontext& context_;
+    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 }
 
@@ -321,11 +318,11 @@ private:
 //#define global
 
 #define APPLY_DEFINES( NAME, CONTEXT, TYPE, FUNCTION, SOURCES )             \
-class NAME##_CLASS : public openclam::kernel_base< TYPE >                   \
+class NAME##_CLASS : public clever::kernel_base< TYPE >                   \
 {                                                                           \
 public:                                                                     \
-    explicit NAME##_CLASS( const openclam::icontext& CONTEXT )              \
-                : openclam::kernel_base< TYPE >( #NAME, CONTEXT, SOURCES )  \
+    explicit NAME##_CLASS( const clever::icontext& CONTEXT )              \
+                : clever::kernel_base< TYPE >( #NAME, CONTEXT, SOURCES )  \
              {                                                              \
                 type_check();                                               \
                 f_ = boost::bind( &NAME##_CLASS :: NAME, this, _1 );        \
@@ -343,11 +340,11 @@ APPLY_DEFINES( NAME, CONTEXT, TYPE, FUNCTION, #FUNCTION );
 
 /// K 3
 #define APPLY_DEFINES3( NAME, CONTEXT, TYPE1, TYPE2, TYPE3, FUNCTION, SOURCES )             \
-class NAME##_CLASS : public openclam::kernel_base3< TYPE1, TYPE2, TYPE3 >                   \
+class NAME##_CLASS : public clever::kernel_base3< TYPE1, TYPE2, TYPE3 >                   \
 {                                                                           \
 public:                                                                     \
-    explicit NAME##_CLASS( const openclam::icontext& CONTEXT )              \
-                : openclam::kernel_base3< TYPE1, TYPE2, TYPE3 >( #NAME, CONTEXT, SOURCES )  \
+    explicit NAME##_CLASS( const clever::icontext& CONTEXT )              \
+                : clever::kernel_base3< TYPE1, TYPE2, TYPE3 >( #NAME, CONTEXT, SOURCES )  \
              {                                                              \
              }                                                              \
     virtual ~NAME##_CLASS() {}                                              \
@@ -361,11 +358,11 @@ APPLY_DEFINES3( NAME, CONTEXT, TYPE1, TYPE2, TYPE3,FUNCTION, #FUNCTION );
 
 
 #define APPLY_DEFINES4( NAME, CONTEXT, TYPE1, TYPE2, TYPE3, TYPE4, FUNCTION, SOURCES )             \
-class NAME##_CLASS : public openclam::kernel_base4< TYPE1, TYPE2, TYPE3, TYPE4 >                   \
+class NAME##_CLASS : public clever::kernel_base4< TYPE1, TYPE2, TYPE3, TYPE4 >                   \
 {                                                                           \
 public:                                                                     \
-    explicit NAME##_CLASS( const openclam::icontext& CONTEXT )              \
-                : openclam::kernel_base4< TYPE1, TYPE2, TYPE3, TYPE4 >( #NAME, CONTEXT, SOURCES )  \
+    explicit NAME##_CLASS( const clever::icontext& CONTEXT )              \
+                : clever::kernel_base4< TYPE1, TYPE2, TYPE3, TYPE4 >( #NAME, CONTEXT, SOURCES )  \
              {                                                              \
              }                                                              \
     virtual ~NAME##_CLASS() {}                                              \
@@ -378,11 +375,11 @@ APPLY_DEFINES4( NAME, CONTEXT, TYPE1, TYPE2, TYPE3, TYPE4, FUNCTION, #FUNCTION )
 
 // still some problems with the boost :: bind stuff
 #define APPLY_DEFINES4_CLASS(  NAME,  TYPE1, TYPE2,TYPE3,TYPE4, FUNCTION, SOURCES )             \
-class NAME##_CLASS : public openclam::kernel_base4< TYPE1, TYPE2,TYPE3,TYPE4 >                   \
+class NAME##_CLASS : public clever::kernel_base4< TYPE1, TYPE2,TYPE3,TYPE4 >                   \
 {                                                                           \
 public:                                                                     \
-    explicit NAME##_CLASS( const openclam::icontext& context )              \
-                : openclam::kernel_base4< TYPE1, TYPE2,TYPE3,TYPE4 >( #NAME, context, SOURCES )  \
+    explicit NAME##_CLASS( const clever::icontext& context )              \
+                : clever::kernel_base4< TYPE1, TYPE2,TYPE3,TYPE4 >( #NAME, context, SOURCES )  \
              {                                                              \
              }                                                              \
     virtual ~NAME##_CLASS() {}                                              \
@@ -399,11 +396,11 @@ APPLY_DEFINES4_CLASS(  NAME,  TYPE1, TYPE2,TYPE3,TYPE4, FUNCTION, #FUNCTION )
 /// 5 ////
 
 #define APPLY_DEFINES5( NAME, CONTEXT, TYPE1, TYPE2, TYPE3, TYPE4, TYPE5, FUNCTION, SOURCES )             \
-class NAME##_CLASS : public openclam::kernel_base5< TYPE1, TYPE2, TYPE3, TYPE4, TYPE5 >                   \
+class NAME##_CLASS : public clever::kernel_base5< TYPE1, TYPE2, TYPE3, TYPE4, TYPE5 >                   \
 {                                                                           \
 public:                                                                     \
-    explicit NAME##_CLASS( const openclam::icontext& CONTEXT )              \
-                : openclam::kernel_base5< TYPE1, TYPE2, TYPE3, TYPE4, TYPE5 >( #NAME, CONTEXT, SOURCES )  \
+    explicit NAME##_CLASS( const clever::icontext& CONTEXT )              \
+                : clever::kernel_base5< TYPE1, TYPE2, TYPE3, TYPE4, TYPE5 >( #NAME, CONTEXT, SOURCES )  \
              {                                                              \
              }                                                              \
     virtual ~NAME##_CLASS() {}                                              \
@@ -418,11 +415,11 @@ APPLY_DEFINES5( NAME, CONTEXT, TYPE1, TYPE2, TYPE3, TYPE4, TYPE5, FUNCTION, #FUN
 
 // still some problems with the boost :: bind stuff
 #define APPLY_DEFINES5_CLASS(  NAME,  TYPE1, TYPE2,TYPE3,TYPE4,TYPE5, FUNCTION, SOURCES )             \
-class NAME##_CLASS : public openclam::kernel_base5< TYPE1, TYPE2,TYPE3,TYPE4,TYPE5 >                   \
+class NAME##_CLASS : public clever::kernel_base5< TYPE1, TYPE2,TYPE3,TYPE4,TYPE5 >                   \
 {                                                                           \
 public:                                                                     \
-    explicit NAME##_CLASS( const openclam::icontext& context )              \
-                : openclam::kernel_base5< TYPE1, TYPE2,TYPE3,TYPE4,TYPE5 >( #NAME, context, SOURCES )  \
+    explicit NAME##_CLASS( const clever::icontext& context )              \
+                : clever::kernel_base5< TYPE1, TYPE2,TYPE3,TYPE4,TYPE5 >( #NAME, context, SOURCES )  \
              {                                                              \
              }                                                              \
     virtual ~NAME##_CLASS() {}  											\

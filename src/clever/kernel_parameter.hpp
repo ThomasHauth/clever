@@ -16,7 +16,7 @@
 #include <boost/static_assert.hpp>
 
 //#include "types.hpp"
-namespace openclam
+namespace clever
 {
 
 class kernel_parameter //: private boost::noncopyable

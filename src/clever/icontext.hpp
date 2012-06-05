@@ -17,7 +17,7 @@
 #include "range.hpp"
 
 
-namespace openclam
+namespace clever
 {
 
 
@@ -54,26 +54,20 @@ struct profile_info
 class icontext : private boost::noncopyable
 {
 public:
-    enum device_type
-    {
-        default_    = CL_DEVICE_TYPE_DEFAULT,
-        cpu         = CL_DEVICE_TYPE_CPU,
-        gpu         = CL_DEVICE_TYPE_GPU,
-        accelerator = CL_DEVICE_TYPE_ACCELERATOR,
-        device_all         = CL_DEVICE_TYPE_ALL
-    };
+
+
 
              icontext() {}
     virtual ~icontext() {}
 
-    virtual std::auto_ptr< openclam::ikernel_proxy > create( const std::string& name,
+    virtual std::auto_ptr< clever::ikernel_proxy > create( const std::string& name,
     		const std::string& sources ) const = 0;
 
-    virtual void execute( void* data, ::size_t size, const openclam::ikernel_proxy& k ) const = 0;
+
 
     virtual cl_event execute_params( kernel_parameter_list const& parameter,
-    		 const openclam::ikernel_proxy& k,
-    		 const openclam::range & r,
+    		 const clever::ikernel_proxy& k,
+    		 const clever::range & r,
     		 const bool reverseParameters = false ) const = 0;
 
 /*

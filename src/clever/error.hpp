@@ -6,8 +6,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef OPENCLAM_ERROR_HPP_INCLUDED
-#define OPENCLAM_ERROR_HPP_INCLUDED
+#pragma once
 
 #include <stdexcept>
 
@@ -15,6 +14,8 @@
 //#pragma warning( disable: 4702 )
 #include <boost/lexical_cast.hpp>
 //#pragma warning( pop )
+
+#include "cl_libs.h"
 
 
 struct opencl_error
@@ -85,4 +86,3 @@ struct opencl_error
     }\
 }
 
-#endif // #ifndef OPENCLAM_ERROR_HPP_INCLUDED

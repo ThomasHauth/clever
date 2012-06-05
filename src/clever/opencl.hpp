@@ -6,22 +6,31 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef OPENCLAM_OPENCL_HPP_INCLUDED
-#define OPENCLAM_OPENCL_HPP_INCLUDED
+#pragma once
 
 #include <stdexcept>
 
-#include "iopencl.hpp"
+#include "cl_libs.h"
 #include "error.hpp"
 
 
-namespace openclam
+namespace clever
 {
 
-class opencl : public iopencl
+class opencl
 {
 public:
-             opencl() {}
+
+    enum device_type
+    {
+        default_    = CL_DEVICE_TYPE_DEFAULT,
+        cpu         = CL_DEVICE_TYPE_CPU,
+        gpu         = CL_DEVICE_TYPE_GPU,
+        accelerator = CL_DEVICE_TYPE_ACCELERATOR,
+        device_all         = CL_DEVICE_TYPE_ALL
+    };
+
+	opencl() {}
     virtual ~opencl() {}
 
     //const std::string PlatformNameIntel = "Intel(R) OpenCL";
@@ -54,7 +63,7 @@ public:
     		throw new std::runtime_error( "Unknown OpenCL Platform " + name);
     }
 
-    virtual cl_uint getPlatformDeviceMaxComputeUnits ( icontext::device_type type, std::string platformName = ""  ) const
+    static cl_uint getPlatformDeviceMaxComputeUnits ( opencl::device_type type, std::string platformName = ""  )
     {
 
         cl_device_id dev;
@@ -64,9 +73,9 @@ public:
 
     }
 
-    virtual cl_context createContext( icontext::device_type dev_type,
+    static cl_context createContext( opencl::device_type dev_type,
     		std::string platformName = "",
-    		int limitComputeUnits = -1 ) const
+    		int limitComputeUnits = -1 )
     {
         cl_context result;
 
@@ -114,38 +123,38 @@ public:
         return result;
     }
 
-    virtual cl_int clGetContextInfo( cl_context context,
+    static cl_int clGetContextInfo( cl_context context,
                                      cl_context_info param_name, 
                                      ::size_t param_value_size,
                                      void* param_value, 
-                                     ::size_t* param_value_size_ret ) const
+                                     ::size_t* param_value_size_ret )
     {
         return ::clGetContextInfo( context, param_name, param_value_size, param_value, param_value_size_ret );
     }
 
-    virtual cl_command_queue clCreateCommandQueue( cl_context context,
+    static cl_command_queue clCreateCommandQueue( cl_context context,
                                                    cl_device_id device, 
                                                    cl_command_queue_properties properties,
-                                                   cl_int* errcode_ret ) const
+                                                   cl_int* errcode_ret )
     {
         return ::clCreateCommandQueue( context, device, properties, errcode_ret );
     }
 
-    virtual cl_int clReleaseCommandQueue( cl_command_queue command_queue ) const
+    static cl_int clReleaseCommandQueue( cl_command_queue command_queue )
     {
         return ::clReleaseCommandQueue( command_queue );
     }
 
-    virtual cl_int clReleaseContext( cl_context context ) const
+    static cl_int clReleaseContext( cl_context context )
     {
         return ::clReleaseContext( context );
     }
 
-    virtual cl_int clGetEventProfilingInfo ( 	cl_event ev,
+    static cl_int clGetEventProfilingInfo ( 	cl_event ev,
 												cl_profiling_info param_name,
 												size_t param_value_size,
 												void *param_value,
-												size_t *param_value_size_ret) const
+												size_t *param_value_size_ret)
     {
     	return ::clGetEventProfilingInfo( ev,
     			param_name,
@@ -155,44 +164,44 @@ public:
     }
 
 
-    virtual cl_program clCreateProgramWithSource( cl_context context,
+    static cl_program clCreateProgramWithSource( cl_context context,
                                                   cl_uint count,
                                                   const char** strings,
                                                   const ::size_t* lengths,
-                                                  cl_int* errcode_ret ) const
+                                                  cl_int* errcode_ret )
     {
         return ::clCreateProgramWithSource( context, count, strings, lengths, errcode_ret );
     }
 
-    virtual cl_mem clCreateBuffer( cl_context context,
+    static cl_mem clCreateBuffer( cl_context context,
                                    cl_mem_flags flags,
                                    ::size_t size,
                                    void* host_ptr,
-                                   cl_int* errcode_ret ) const
+                                   cl_int* errcode_ret )
     {
         return ::clCreateBuffer( context, flags, size, host_ptr, errcode_ret );
     }
 
-    virtual cl_int clSetKernelArg( cl_kernel clkernel,
+    static cl_int clSetKernelArg( cl_kernel clkernel,
                                    cl_uint arg_index,
                                    ::size_t arg_size,
-                                   const void* arg_value ) const
+                                   const void* arg_value )
     {
         return ::clSetKernelArg( clkernel, arg_index, arg_size, arg_value );
     }
 
-    virtual cl_int clFinish ( 	cl_command_queue command_queue) const
+    static cl_int clFinish ( 	cl_command_queue command_queue)
     {
     	return ::clFinish( command_queue );
     }
 
-    virtual cl_int clFlush ( 	cl_command_queue command_queue) const
+    static cl_int clFlush ( 	cl_command_queue command_queue)
     {
     	return ::clFlush( command_queue );
     }
 
 
-    virtual cl_int clEnqueueWriteBuffer( cl_command_queue command_queue, 
+    static cl_int clEnqueueWriteBuffer( cl_command_queue command_queue,
                                          cl_mem buffer, 
                                          cl_bool blocking_write, 
                                          ::size_t offset,
@@ -200,12 +209,12 @@ public:
                                          const void* ptr, 
                                          cl_uint num_events_in_wait_list, 
                                          const cl_event* event_wait_list, 
-                                         cl_event* event ) const
+                                         cl_event* event )
     {
         return ::clEnqueueWriteBuffer( command_queue, buffer, blocking_write, offset, cb, ptr, num_events_in_wait_list, event_wait_list, event );
     }
 
-    virtual cl_int clEnqueueNDRangeKernel( cl_command_queue command_queue,
+    static cl_int clEnqueueNDRangeKernel( cl_command_queue command_queue,
                                            cl_kernel clkernel,
                                            cl_uint work_dim,
                                            const ::size_t* global_work_offset,
@@ -213,13 +222,13 @@ public:
                                            const ::size_t* local_work_size,
                                            cl_uint num_events_in_wait_list,
                                            const cl_event* event_wait_list,
-                                           cl_event* event ) const
+                                           cl_event* event )
     {
         return ::clEnqueueNDRangeKernel( command_queue, clkernel, work_dim, global_work_offset, global_work_size,
                                          local_work_size, num_events_in_wait_list, event_wait_list, event );
     }
 
-    virtual cl_int clEnqueueReadBuffer( cl_command_queue command_queue,
+    static cl_int clEnqueueReadBuffer( cl_command_queue command_queue,
                                         cl_mem buffer,
                                         cl_bool blocking_read,
                                         size_t offset,
@@ -227,39 +236,39 @@ public:
                                         void* ptr,
                                         cl_uint num_events_in_wait_list,
                                         const cl_event* event_wait_list,
-                                        cl_event* event ) const
+                                        cl_event* event )
     {
         return ::clEnqueueReadBuffer( command_queue, buffer, blocking_read, offset, cb, ptr, num_events_in_wait_list, event_wait_list, event );
     }
 
-    virtual cl_int clReleaseMemObject( cl_mem memobj ) const
+    static cl_int clReleaseMemObject( cl_mem memobj )
     {
         return ::clReleaseMemObject( memobj );
     }
 
-    virtual cl_int clBuildProgram( cl_program program,
+    static cl_int clBuildProgram( cl_program program,
                                    cl_uint num_devices,
                                    const cl_device_id* device_list,
                                    const char* options, 
                                    void ( *pfn_notify )( cl_program program, void* user_data ),
-                                   void* user_data ) const
+                                   void* user_data )
     {
         return ::clBuildProgram( program, num_devices, device_list, options, pfn_notify, user_data );
     }
 
-    virtual cl_int clReleaseProgram( cl_program program ) const
+    static cl_int clReleaseProgram( cl_program program )
     {
         return ::clReleaseProgram( program );
     }
 
-    virtual cl_kernel clCreateKernel( cl_program program,
+    static cl_kernel clCreateKernel( cl_program program,
                                       const char* kernel_name,
-                                      cl_int* errcode_ret ) const
+                                      cl_int* errcode_ret )
     {
         return ::clCreateKernel( program, kernel_name, errcode_ret );
     }
 
-    virtual cl_int clReleaseKernel( cl_kernel clKernel ) const
+    static cl_int clReleaseKernel( cl_kernel clKernel )
     {
         return ::clReleaseKernel( clKernel );
     }
@@ -288,7 +297,7 @@ public:
 			std::string pname ( char_out );
 			if ( pname == platformName)
 			{
-				std::cout << std::endl << "Found platform " << platformName;
+				//std::cout << std::endl << "Found platform " << platformName;
 				return platforms[i];
 			}
 		}
@@ -297,13 +306,13 @@ public:
     }
 
     static cl_device_id getDeviceId( std::string platformName = "",
-    		openclam::icontext::device_type dev_type = openclam::icontext::device_all )
+    		clever::opencl::device_type dev_type = clever::opencl::device_all )
     {
 		cl_platform_id platform_id = getPlatformId(platformName);
 		cl_device_id devices[32];
 		cl_uint numDevices;
 
-		std::cout << std::endl << "Loading Device for platform " << platformName;
+		//std::cout << std::endl << "Loading Device for platform " << platformName;
 		ERROR_HANDLER ( ERROR = ::clGetDeviceIDs ( platform_id, dev_type,
 				32, devices, &numDevices ) );
 
@@ -311,12 +320,12 @@ public:
 		return devices[0];
     }
 
-    virtual cl_int clGetProgramBuildInfo ( 	cl_program  program,
+    static cl_int clGetProgramBuildInfo ( 	cl_program  program,
 											cl_device_id  device,
 											cl_program_build_info  param_name,
 											size_t  param_value_size,
 											void  *param_value,
-											size_t  *param_value_size_ret) const
+											size_t  *param_value_size_ret)
     {
     	return :: clGetProgramBuildInfo ( program,
     										device,
@@ -326,7 +335,7 @@ public:
 											param_value_size_ret);
     }
 
-    virtual cl_uint getDeviceMaxComputeUnits ( cl_device_id dev_id ) const
+    static cl_uint getDeviceMaxComputeUnits ( cl_device_id dev_id )
     {
     	cl_uint intTmp;
     	ERROR_HANDLER ( ERROR = ::clGetDeviceInfo( dev_id, CL_DEVICE_MAX_COMPUTE_UNITS, sizeof( cl_uint), &intTmp, NULL ) );
@@ -381,7 +390,8 @@ public:
 
 			}
 
-			/*			std::string pName;
+			/*
+			std::string pName;
 			std::string pVend;
 			std::string pExt;
 			std::string pVersion;
@@ -425,5 +435,3 @@ public:
 };
 
 }
-
-#endif // #ifndef OPENCLAM_OPENCL_HPP_INCLUDED

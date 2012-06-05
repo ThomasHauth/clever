@@ -9,7 +9,7 @@
 #ifndef OPENCLAM_CL_HPP_INCLUDED
 #define OPENCLAM_CL_HPP_INCLUDED
 
-#include <CL/cl.h>
+#include "cl_libs.h"
 #include "context.hpp"
 #include "kernel.hpp"
 #include "for_each.hpp"

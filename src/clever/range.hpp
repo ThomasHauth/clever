@@ -18,7 +18,7 @@
 //#include "types.hpp"
 
 
-namespace openclam
+namespace clever
 {
 
 class range// : private boost::noncopyable

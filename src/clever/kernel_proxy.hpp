@@ -9,24 +9,23 @@
 #ifndef OPENCLAM_KERNEL_PROXY_HPP_INCLUDED
 #define OPENCLAM_KERNEL_PROXY_HPP_INCLUDED
 
+#include "opencl.hpp"
 #include "ikernel_proxy.hpp"
-#include "iopencl.hpp"
 #include "kernel_parameter.hpp"
 #include "range.hpp"
 
-namespace openclam
+namespace clever
 {
 
-class kernel_proxy : public openclam::ikernel_proxy
+class kernel_proxy : public clever::ikernel_proxy
 {
 public:
-    kernel_proxy( const std::string& name, const openclam::iopencl& wrapper, cl_program program )
-       : wrapper_( wrapper )
-       , program_( program )
+    kernel_proxy( const std::string& name,  cl_program program )
+       : program_( program )
     	, _kernel_name( name )
 
     {
-        ERROR_HANDLER( kernel_ = wrapper_.clCreateKernel( program_, name.c_str(), &ERROR ) );
+        ERROR_HANDLER( kernel_ = opencl::clCreateKernel( program_, name.c_str(), &ERROR ) );
     }
     virtual ~kernel_proxy()
     {
@@ -41,22 +40,10 @@ public:
     	std::cout << std::endl << "Program " << _kernel_name << " released";*/
     }
 
-    virtual void execute( void* data, ::size_t size, cl_context context, cl_command_queue queue ) const
-    {/*
-        cl_mem arg;
-        ERROR_HANDLER( arg = wrapper_.clCreateBuffer( context, CL_MEM_READ_WRITE, size, NULL, &ERROR ) );
-        ERROR_HANDLER( ERROR = wrapper_.clSetKernelArg( kernel_, 0, sizeof( cl_mem ), &arg ) );
-        ERROR_HANDLER( ERROR = wrapper_.clEnqueueWriteBuffer( queue, arg, CL_TRUE, 0, size, data, 0, NULL, NULL ) );
-        ERROR_HANDLER( ERROR = wrapper_.clEnqueueNDRangeKernel( queue, kernel_, 1, NULL, &size, NULL, 0, NULL, NULL ) );
-        ERROR_HANDLER( ERROR = wrapper_.clEnqueueReadBuffer( queue, arg, CL_TRUE, 0, size, data, 0, NULL, NULL ) );
-        ERROR_HANDLER( ERROR = wrapper_.clReleaseMemObject( arg ) );*/
-    	assert ( false ); // old code
-    }
-
 
     virtual cl_event execute_params( kernel_parameter_list const& parameter,
     		cl_context context, cl_command_queue queue,
-    		const openclam::range & r,
+    		const clever::range & r,
     		const bool reverseParameters = false) const
     {
     	// pass parameter
@@ -66,7 +53,7 @@ public:
     		  it != parameter.end(); ++ it )
     	{
     		ERROR_HANDLER( ERROR =
-    		wrapper_.clSetKernelArg( kernel_,
+    		opencl::clSetKernelArg( kernel_,
     				parameter_number,
     				it->size_,
     				it->buffer_ )
@@ -75,10 +62,10 @@ public:
 			++ parameter_number;
     	}
 
-    	cl_event evt;
+    	cl_event evt = 0;
 
     	// enque kernel
-    	ERROR_HANDLER( ERROR = wrapper_.clEnqueueNDRangeKernel( queue, kernel_,
+    	ERROR_HANDLER( ERROR = opencl::clEnqueueNDRangeKernel( queue, kernel_,
     			r.dimension(), //  work_dim
     			NULL, // global_work_offset
     			r.sizes(), // global_work_size
@@ -89,19 +76,12 @@ public:
     			);
 
     	return evt;
-/*        cl_mem arg;
-        ERROR_HANDLER( arg = wrapper_.clCreateBuffer( context, CL_MEM_READ_WRITE, size, NULL, &ERROR ) );
-        ERROR_HANDLER( ERROR = wrapper_.clSetKernelArg( kernel_, 0, sizeof( cl_mem ), &arg ) );
-        ERROR_HANDLER( ERROR = wrapper_.clEnqueueWriteBuffer( queue, arg, CL_TRUE, 0, size, data, 0, NULL, NULL ) );
-        ERROR_HANDLER( ERROR = wrapper_.clEnqueueNDRangeKernel( queue, kernel_, 1, NULL, &size, NULL, 0, NULL, NULL ) );
-        ERROR_HANDLER( ERROR = wrapper_.clEnqueueReadBuffer( queue, arg, CL_TRUE, 0, size, data, 0, NULL, NULL ) );
-        ERROR_HANDLER( ERROR = wrapper_.clReleaseMemObject( arg ) );*/
     }
 
 
     virtual void execute_params_var(
     		cl_context context, cl_command_queue queue,
-    		const openclam::range & r,
+    		const clever::range & r,
     		kernel_parameter const& kp1 )
     {
 
@@ -109,7 +89,6 @@ public:
 
 
 private:
-    const openclam::iopencl& wrapper_;
     cl_program program_;
     cl_kernel kernel_;
     std::string _kernel_name;

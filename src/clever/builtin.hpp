@@ -11,7 +11,7 @@
 
 #include <boost/noncopyable.hpp>
 
-namespace openclam
+namespace clever
 {
 
 class builtin : private boost::noncopyable

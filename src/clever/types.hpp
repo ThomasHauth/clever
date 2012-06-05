@@ -6,22 +6,21 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef OPENCLAM_TYPES_HPP_INCLUDED
-#define OPENCLAM_TYPES_HPP_INCLUDED
+#pragma once
 
 #include <boost/noncopyable.hpp>
 
-#include "icontext.hpp"
+#include "context.hpp"
 #include "range.hpp"
 #include "transfer.hpp"
 
-namespace openclam {
-
-class icontext;
+namespace clever
+{
 
 // not one vector, but N vectors alligned in memory
 template<class Type, unsigned int D>
-class vector: private boost::noncopyable {
+class vector: private boost::noncopyable
+{
 public:
 	typedef Type value_type;
 
@@ -31,48 +30,50 @@ public:
 
 	typedef typename std::vector<Type> VectorType;
 
-	explicit vector(iopencl const& wrapper, icontext & c, size_t count = 1) :
-			_wrapper(wrapper), _count(count) {
-		transfer::create(*this, count, c, wrapper);
+	explicit vector(  icontext & c, size_t count = 1) :
+			 _count(count)
+	{
+		transfer::create(*this, count, c );
 	}
 
 	explicit vector(VectorType const & input, // prototype
-			size_t count, iopencl const& wrapper, icontext & c) :
-			_wrapper(wrapper), _count(count) {
-		transfer::create(*this, input, count, c, wrapper);
-	}
-
-	explicit vector( value_type intial_value, // prototype
-			size_t count, iopencl const& wrapper, icontext & c) :
-			_wrapper(wrapper), _count(count)
+			size_t count, icontext & c) :
+			  _count(count)
 	{
-		std::vector < value_type > vtmp( count * value_elements, intial_value );
-		transfer::create(*this, vtmp, count, c, wrapper);
+		transfer::create(*this, input, count, c );
 	}
 
-	~vector() {
+	explicit vector(value_type intial_value, // prototype
+			size_t count,  icontext & c) :
+			  _count(count)
+	{
+		std::vector<value_type> vtmp(count * value_elements, intial_value);
+		transfer::create(*this, vtmp, count, c );
+	}
+
+	~vector()
+	{
 		// free memory
 		// do expclicit
-		_wrapper.clReleaseMemObject(mem_);
-        std::cout << std::endl << "released buffer of size "
-        		<< (value_size * _count) / 1000.0f << " kB";
+		opencl::clReleaseMemObject(mem_);
+		/*std::cout << std::endl << "released buffer of size "
+				<< (value_size * _count) / 1000.0f << " kB";*/
 
 	}
 
 	// more interfacing here, for example smatrix
-	void to_array(VectorType & arr, iopencl const& wrapper,
-			icontext & c) const {
-		transfer::download(*this, arr, c, wrapper);
+	void to_array(VectorType & arr, icontext & c) const
+	{
+		transfer::download(*this, arr, c );
 	}
 
 	// todo: make this with constexpr
-	openclam::range range() const {
-		return openclam::range( _count );
+	clever::range range() const
+	{
+		return clever::range(_count);
 	}
 
 	cl_mem mem_;
-
-	iopencl const& _wrapper;
 	size_t _count;
 };
 
@@ -88,57 +89,60 @@ public:
 
 	typedef typename std::vector<Type> VectorType;
 
-	explicit matrix(iopencl const& wrapper, icontext & c, size_t count = 1) :
-			_wrapper(wrapper), _count(count) {
-		transfer::create(*this, count, c, wrapper);
+	explicit matrix( icontext & c, size_t count = 1) :
+			_count(count)
+	{
+		transfer::create(*this, count, c );
 	}
 
 	explicit matrix(VectorType const & input, size_t count,
-			iopencl const& wrapper, icontext & c) :
-			_wrapper(wrapper), _count(count) {
-		transfer::create(*this, input, count, c, wrapper);
+			icontext & c) :
+			 _count(count)
+	{
+		transfer::create(*this, input, count, c );
 	}
 
 	explicit matrix(value_type initial_value, size_t count,
-			iopencl const& wrapper, icontext & c) :
-			_wrapper(wrapper), _count(count) {
-		std::vector < value_type > vtmp( count * value_elements , initial_value );
-		transfer::create(*this, vtmp, count, c, wrapper);
+			icontext & c) :
+			_count(count)
+	{
+		std::vector<value_type> vtmp(count * value_elements, initial_value);
+		transfer::create(*this, vtmp, count, c );
 	}
-	~matrix() {
+	~matrix()
+	{
 		// free memory
 		// do expclicit
-		_wrapper.clReleaseMemObject(mem_);
-        std::cout << std::endl << "released buffer of size "
-        		<< (value_size * _count) / 1000.0f << " kB";
+		opencl::clReleaseMemObject(mem_);
+/*		std::cout << std::endl << "released buffer of size "
+				<< (value_size * _count) / 1000.0f << " kB";*/
 	}
 
 	// more interfacing here, for example smatrix
-	void to_array(VectorType & arr, iopencl const& wrapper,
-			icontext & c) const {
-		transfer::download(*this, arr, c, wrapper);
+	void to_array(VectorType & arr, icontext & c) const
+	{
+		transfer::download(*this, arr, c );
 	}
 
 	// todo: make this with constexpr
-	openclam::range range() const {
+	clever::range range() const
+	{
 		//todo: fix this, must use _count !!
-		assert( false );
-		return openclam::range(value_dim, value_dim);
+		assert( false);
+		return clever::range(value_dim, value_dim);
 	}
 
-	openclam::range range_linear() const {
+	clever::range range_linear() const
+	{
 		//todo: fix this, must use _count !!
-		assert( false );
+		assert( false);
 
-		return openclam::range(value_elements);
+		return clever::range(value_elements);
 	}
 
 	cl_mem mem_;
-
-	iopencl const& _wrapper;
 	size_t _count;
 };
 
 }
 
-#endif // #ifndef OPENCLAM_TYPES_HPP_INCLUDED
