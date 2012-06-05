@@ -26,13 +26,13 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base1(){}
-    void run( T1 data1, range const& r ) const
+    cl_event run( T1 data1, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1, range const& r )
     {
@@ -71,14 +71,14 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base2(){}
-    void run( T1 data1,T2 data2, range const& r ) const
+    cl_event run( T1 data1,T2 data2, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
 plist.push_back( parameter_factory< T2>::parameter( data2 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2, range const& r )
     {
@@ -117,7 +117,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base3(){}
-    void run( T1 data1,T2 data2,T3 data3, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -125,7 +125,7 @@ plist.push_back( parameter_factory< T2>::parameter( data2 ));
 plist.push_back( parameter_factory< T3>::parameter( data3 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3, range const& r )
     {
@@ -164,7 +164,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base4(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -173,7 +173,7 @@ plist.push_back( parameter_factory< T3>::parameter( data3 ));
 plist.push_back( parameter_factory< T4>::parameter( data4 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4, range const& r )
     {
@@ -212,7 +212,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base5(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -222,7 +222,7 @@ plist.push_back( parameter_factory< T4>::parameter( data4 ));
 plist.push_back( parameter_factory< T5>::parameter( data5 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5, range const& r )
     {
@@ -261,7 +261,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base6(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -272,7 +272,7 @@ plist.push_back( parameter_factory< T5>::parameter( data5 ));
 plist.push_back( parameter_factory< T6>::parameter( data6 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6, range const& r )
     {
@@ -311,7 +311,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base7(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -323,7 +323,7 @@ plist.push_back( parameter_factory< T6>::parameter( data6 ));
 plist.push_back( parameter_factory< T7>::parameter( data7 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7, range const& r )
     {
@@ -362,7 +362,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base8(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -375,7 +375,7 @@ plist.push_back( parameter_factory< T7>::parameter( data7 ));
 plist.push_back( parameter_factory< T8>::parameter( data8 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8, range const& r )
     {
@@ -414,7 +414,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base9(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -428,7 +428,7 @@ plist.push_back( parameter_factory< T8>::parameter( data8 ));
 plist.push_back( parameter_factory< T9>::parameter( data9 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9, range const& r )
     {
@@ -467,7 +467,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base10(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -482,7 +482,7 @@ plist.push_back( parameter_factory< T9>::parameter( data9 ));
 plist.push_back( parameter_factory< T10>::parameter( data10 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10, range const& r )
     {
@@ -521,7 +521,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base11(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -537,7 +537,7 @@ plist.push_back( parameter_factory< T10>::parameter( data10 ));
 plist.push_back( parameter_factory< T11>::parameter( data11 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11, range const& r )
     {
@@ -576,7 +576,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base12(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -593,7 +593,7 @@ plist.push_back( parameter_factory< T11>::parameter( data11 ));
 plist.push_back( parameter_factory< T12>::parameter( data12 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12, range const& r )
     {
@@ -632,7 +632,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base13(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -650,7 +650,7 @@ plist.push_back( parameter_factory< T12>::parameter( data12 ));
 plist.push_back( parameter_factory< T13>::parameter( data13 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13, range const& r )
     {
@@ -689,7 +689,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base14(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -708,7 +708,7 @@ plist.push_back( parameter_factory< T13>::parameter( data13 ));
 plist.push_back( parameter_factory< T14>::parameter( data14 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14, range const& r )
     {
@@ -747,7 +747,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base15(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -767,7 +767,7 @@ plist.push_back( parameter_factory< T14>::parameter( data14 ));
 plist.push_back( parameter_factory< T15>::parameter( data15 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15, range const& r )
     {
@@ -806,7 +806,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base16(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -827,7 +827,7 @@ plist.push_back( parameter_factory< T15>::parameter( data15 ));
 plist.push_back( parameter_factory< T16>::parameter( data16 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16, range const& r )
     {
@@ -866,7 +866,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base17(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -888,7 +888,7 @@ plist.push_back( parameter_factory< T16>::parameter( data16 ));
 plist.push_back( parameter_factory< T17>::parameter( data17 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17, range const& r )
     {
@@ -927,7 +927,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base18(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -950,7 +950,7 @@ plist.push_back( parameter_factory< T17>::parameter( data17 ));
 plist.push_back( parameter_factory< T18>::parameter( data18 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18, range const& r )
     {
@@ -989,7 +989,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base19(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1013,7 +1013,7 @@ plist.push_back( parameter_factory< T18>::parameter( data18 ));
 plist.push_back( parameter_factory< T19>::parameter( data19 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19, range const& r )
     {
@@ -1052,7 +1052,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base20(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1077,7 +1077,7 @@ plist.push_back( parameter_factory< T19>::parameter( data19 ));
 plist.push_back( parameter_factory< T20>::parameter( data20 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20, range const& r )
     {
@@ -1116,7 +1116,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base21(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1142,7 +1142,7 @@ plist.push_back( parameter_factory< T20>::parameter( data20 ));
 plist.push_back( parameter_factory< T21>::parameter( data21 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21, range const& r )
     {
@@ -1181,7 +1181,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base22(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1208,7 +1208,7 @@ plist.push_back( parameter_factory< T21>::parameter( data21 ));
 plist.push_back( parameter_factory< T22>::parameter( data22 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22, range const& r )
     {
@@ -1247,7 +1247,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base23(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1275,7 +1275,7 @@ plist.push_back( parameter_factory< T22>::parameter( data22 ));
 plist.push_back( parameter_factory< T23>::parameter( data23 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23, range const& r )
     {
@@ -1314,7 +1314,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base24(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1343,7 +1343,7 @@ plist.push_back( parameter_factory< T23>::parameter( data23 ));
 plist.push_back( parameter_factory< T24>::parameter( data24 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24, range const& r )
     {
@@ -1382,7 +1382,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base25(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1412,7 +1412,7 @@ plist.push_back( parameter_factory< T24>::parameter( data24 ));
 plist.push_back( parameter_factory< T25>::parameter( data25 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25, range const& r )
     {
@@ -1451,7 +1451,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base26(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1482,7 +1482,7 @@ plist.push_back( parameter_factory< T25>::parameter( data25 ));
 plist.push_back( parameter_factory< T26>::parameter( data26 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26, range const& r )
     {
@@ -1521,7 +1521,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base27(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1553,7 +1553,7 @@ plist.push_back( parameter_factory< T26>::parameter( data26 ));
 plist.push_back( parameter_factory< T27>::parameter( data27 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27, range const& r )
     {
@@ -1592,7 +1592,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base28(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1625,7 +1625,7 @@ plist.push_back( parameter_factory< T27>::parameter( data27 ));
 plist.push_back( parameter_factory< T28>::parameter( data28 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28, range const& r )
     {
@@ -1664,7 +1664,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base29(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1698,7 +1698,7 @@ plist.push_back( parameter_factory< T28>::parameter( data28 ));
 plist.push_back( parameter_factory< T29>::parameter( data29 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29, range const& r )
     {
@@ -1737,7 +1737,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base30(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1772,7 +1772,7 @@ plist.push_back( parameter_factory< T29>::parameter( data29 ));
 plist.push_back( parameter_factory< T30>::parameter( data30 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30, range const& r )
     {
@@ -1811,7 +1811,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base31(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1847,7 +1847,7 @@ plist.push_back( parameter_factory< T30>::parameter( data30 ));
 plist.push_back( parameter_factory< T31>::parameter( data31 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31, range const& r )
     {
@@ -1886,7 +1886,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base32(){}
-    void run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31,T32 data32, range const& r ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31,T32 data32, range const& r ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1923,7 +1923,7 @@ plist.push_back( parameter_factory< T31>::parameter( data31 ));
 plist.push_back( parameter_factory< T32>::parameter( data32 ));
  
         assert ( kernel_ );
-        context_.execute_params( plist ,  *kernel_, r );
+        return context_.execute_params( plist ,  *kernel_, r );
     }
     void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31,T32 data32, range const& r )
     {

@@ -37,12 +37,12 @@ public:\n\
         assert ( kernel_ );\n\
     }\n\
     virtual ~kernel_base#paramnumber#(){}\n\
-    void run( #parammethod# range const& r ) const\n\
+    cl_event run( #parammethod# range const& r ) const\n\
     {\n\
         kernel_parameter_list plist;\n\
         #paramlist# \n\
         assert ( kernel_ );\n\
-        context_.execute_params( plist ,  *kernel_, r );\n\
+        return context_.execute_params( plist ,  *kernel_, r );\n\
     }\n\
     void operator()( #parammethod# range const& r )\n\
     {\n\

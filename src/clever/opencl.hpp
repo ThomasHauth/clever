@@ -18,11 +18,11 @@ namespace clever
 
 struct platform_query
 {
-	platform_query( std::string platform_name )
-		: m_platform_name ( platform_name )
-	  {
+	platform_query(std::string platform_name) :
+			m_platform_name(platform_name)
+	{
 
-	  }
+	}
 
 	std::string m_platform_name;
 };
@@ -89,41 +89,30 @@ public:
 	}
 
 	static cl_context createContext(opencl::device_type dev_type,
-			std::string platformName = "", int limitComputeUnits = -1)
+			std::string platformName = "", int limitComputeUnits = -1,
+			cl_device_id * p_sub_dev_id = NULL)
 	{
 		cl_context result;
 
-		// PrintInformation();
+		cl_uint iMaxDeviceUnits = getPlatformDeviceMaxComputeUnits(dev_type,
+				platformName);
 
-		// * 	old and easier version which did not work with VTune
-		/*        cl_context_properties props[3];
-		 props[0] = (cl_context_properties)CL_CONTEXT_PLATFORM;  // indicates that next element is platform
-		 props[1] = (cl_context_properties) getDefaultPlatformId();  // platform is of type cl_platform_id
-		 props[2] = (cl_context_properties)0;   // last element must be 0
-
-		 ERROR_HANDLER( result = ::clCreateContextFromType( props, type, NULL, NULL, &ERROR ) );
-		 */
-		/*
-		 cl_context_properties props[3];
-		 props[0] = (cl_context_properties)CL_CONTEXT_PLATFORM;  // indicates that next element is platform
-		 props[1] = (cl_context_properties) getDefaultPlatformId();  // platform is of type cl_platform_id
-		 props[2] = (cl_context_properties)0;   // last element must be 0
-		 */
 		cl_device_id devs[1];
 		devs[0] = getDeviceId(platformName, dev_type);
-		//does not work with the AMD SDK
-		/*
-		 not supported by amd*/
-		if (limitComputeUnits > 0)
+
+		if ((limitComputeUnits > 0) && (limitComputeUnits < iMaxDeviceUnits)) // disallow aliasing
 		{
+
+			std::cout << std::endl << std::endl
+					<< "## Using device partitioning with limitation "
+					<< limitComputeUnits << " and maximal " << iMaxDeviceUnits
+					<< " devices" << std::endl;
+
 			cl_uint part_count = 1;
 			cl_device_id device_id_part[1];
 			const cl_device_partition_property_ext part_props[] =
-			{
-					CL_DEVICE_PARTITION_BY_COUNTS_EXT,
-					// somehow we must add +1 here for the system to use actually the correct number
-					// not understood why, yet
-					(cl_device_partition_property_ext) limitComputeUnits + 1,
+			{ CL_DEVICE_PARTITION_BY_COUNTS_EXT,
+					(cl_device_partition_property_ext) limitComputeUnits,
 					CL_PARTITION_BY_COUNTS_LIST_END_EXT,
 					CL_PROPERTIES_LIST_END_EXT };
 
@@ -132,6 +121,17 @@ public:
 
 			// we have a new device which must be used to create the context
 			devs[0] = device_id_part[0];
+
+			if (p_sub_dev_id != NULL)
+			{
+				p_sub_dev_id[0] = device_id_part[0];
+			}
+
+		}
+
+		if ( limitComputeUnits >= iMaxDeviceUnits )
+		{
+			std::cout << std::endl << "No device partitioned, using full device to prevent device aliasing.";
 		}
 
 		ERROR_HANDLER(
@@ -208,14 +208,8 @@ public:
 			const void* ptr, cl_uint num_events_in_wait_list,
 			const cl_event* event_wait_list, cl_event* event)
 	{
-		return ::clEnqueueWriteBuffer(command_queue,
-				buffer,
-				blocking_write,
-				offset,
-				cb,
-				ptr,
-				num_events_in_wait_list,
-				event_wait_list,
+		return ::clEnqueueWriteBuffer(command_queue, buffer, blocking_write,
+				offset, cb, ptr, num_events_in_wait_list, event_wait_list,
 				event);
 	}
 
@@ -248,7 +242,7 @@ public:
 
 	static cl_int clBuildProgram(cl_program program, cl_uint num_devices,
 			const cl_device_id* device_list, const char* options,
-			void(*pfn_notify)(cl_program program, void* user_data),
+			void (*pfn_notify)(cl_program program, void* user_data),
 			void* user_data)
 	{
 		return ::clBuildProgram(program, num_devices, device_list, options,
@@ -258,6 +252,10 @@ public:
 	static cl_int clReleaseProgram(cl_program program)
 	{
 		return ::clReleaseProgram(program);
+	}
+
+	static cl_int clReleaseDevice(cl_device_id dev) {
+		return ::clReleaseDeviceEXT( dev );
 	}
 
 	static cl_kernel clCreateKernel(cl_program program, const char* kernel_name,
@@ -270,7 +268,6 @@ public:
 	{
 		return ::clReleaseKernel(clKernel);
 	}
-
 
 	static std::vector<platform_query> && query_platforms()
 	{
@@ -286,12 +283,12 @@ public:
 				ERROR = ::clGetPlatformIDs ( 10, platforms, &numPlatforms ));
 
 		std::cout << "OpenCL Platforms :: " << numPlatforms << " available"
-				<< std::endl;
+		<< std::endl;
 
 		for (unsigned int i = 0; i < numPlatforms; ++i)
 		{
 			std::cout << std::endl << "  Platform Id: " << platforms[i]
-			                                                         << std::endl;
+			<< std::endl;
 			::clGetPlatformInfo(platforms[i], CL_PLATFORM_NAME, char_out_size,
 					&char_out, &char_out_final);
 
@@ -314,7 +311,7 @@ public:
 		assert( numPlatforms > 0);
 
 		if (platformName == "")
-			return platforms[0];
+		return platforms[0];
 
 		for (size_t i = 0; i < numPlatforms; ++i)
 		{
@@ -376,12 +373,12 @@ public:
 				ERROR = ::clGetPlatformIDs ( 10, platforms, &numPlatforms ));
 
 		std::cout << "OpenCL Platforms :: " << numPlatforms << " available"
-				<< std::endl;
+		<< std::endl;
 
 		for (unsigned int i = 0; i < numPlatforms; ++i)
 		{
 			std::cout << std::endl << "  Platform Id: " << platforms[i]
-			                                                         << std::endl;
+			<< std::endl;
 			::clGetPlatformInfo(platforms[i], CL_PLATFORM_NAME, char_out_size,
 					&char_out, &char_out_final);
 			std::cout << "  Platform Name: " << char_out << std::endl;
@@ -399,7 +396,7 @@ public:
 					ERROR = ::clGetDeviceIDs ( platforms[i], CL_DEVICE_TYPE_ALL, 1024, devices, &numDevices ));
 
 			std::cout << std::endl << "     Devices = " << numDevices
-					<< std::endl;
+			<< std::endl;
 			for (size_t i_dev = 0; i_dev < numDevices; ++i_dev)
 			{
 				::clGetDeviceInfo(devices[i_dev], CL_DEVICE_NAME, char_out_size,
@@ -411,20 +408,20 @@ public:
 				::clGetDeviceInfo(devices[i_dev], CL_DEVICE_OPENCL_C_VERSION,
 						char_out_size, &char_out, &char_out_final);
 				std::cout << "     Devices OpenCL C Version: " << char_out
-						<< std::endl;
+				<< std::endl;
 				::clGetDeviceInfo(devices[i_dev], CL_DEVICE_MAX_COMPUTE_UNITS,
 						sizeof(cl_uint), &intTmp, NULL);
 				std::cout << "     Devices Max Compute Units: " << intTmp
-						<< std::endl;
+				<< std::endl;
 
 				::clGetDeviceInfo(devices[i_dev], CL_DEVICE_MAX_WORK_GROUP_SIZE,
 						sizeof(cl_uint), &intTmp, NULL);
 				std::cout << "     Devices Max Work Group Size: " << intTmp
-						<< std::endl;
+				<< std::endl;
 				::clGetDeviceInfo(devices[i_dev], CL_DEVICE_MAX_WORK_ITEM_SIZES,
 						sizeof(cl_uint), &intTmp, NULL);
 				std::cout << "     Devices Max Work Item Size: " << intTmp
-						<< std::endl;
+				<< std::endl;
 
 			}
 

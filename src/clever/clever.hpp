@@ -7,6 +7,7 @@
 //
 #include "opencl.hpp"
 #include "context.hpp"
+#include "context_factory.hpp"
 #include "kernel.hpp"
 #include "types.hpp"
 

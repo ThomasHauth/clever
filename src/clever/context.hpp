@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <boost/algorithm/string.hpp>
 
 #include "error.hpp"
@@ -18,21 +20,19 @@
 namespace clever
 {
 
+//typedef std::auto_ptr
+
 struct context_settings
 {
 	context_settings(std::string const& platform_name = "",
 			opencl::device_type device_type = opencl::device_type::default_,
-			std::string build_options = "",
-			bool profile = false,
+			std::string build_options = "", bool profile = false,
 			cl_command_queue_properties cmd_queue_properties = 0,
 			int useComputeUnits = -1) :
 
-			m_platform_name(platform_name),
-			m_device_type( device_type ),
-			m_build_options(build_options),
-			m_profile(profile),
-			m_cmd_queue_properties( cmd_queue_properties),
-			m_useComputeUnits( useComputeUnits)
+			m_platform_name(platform_name), m_device_type(device_type), m_build_options(
+					build_options), m_profile(profile), m_cmd_queue_properties(
+					cmd_queue_properties), m_useComputeUnits(useComputeUnits)
 	{
 
 	}
@@ -55,26 +55,27 @@ class context: public clever::icontext
 {
 public:
 	context(const context_settings & settings = context_settings()) :
-			m_settings(settings)
+			m_settings(settings), sub_dev_id_(NULL)
 	{
-		init_with_settings( settings );
+		init_with_settings(settings);
 	}
 
-	context( std::string platformName, opencl::device_type dev_type,
+	context(std::string platformName, opencl::device_type dev_type,
 			std::string buildProperties = "",
-			cl_command_queue_properties queueSettings = 0,
-			bool profileKernels = false, int threadCount = -1 )
-			{
-				context_settings set (  platformName, dev_type,
-						buildProperties,  profileKernels, queueSettings, threadCount);
+			cl_command_queue_properties queueSettings = 0, bool profileKernels =
+					false, int threadCount = -1) :
+			sub_dev_id_(NULL)
+	{
+		context_settings set(platformName, dev_type, buildProperties,
+				profileKernels, queueSettings, threadCount);
 
-				m_settings = set ;
+		m_settings = set;
 
-				init_with_settings( set );
-			}
+		init_with_settings(set);
+	}
 
 private:
-	void init_with_settings( context_settings const& setttings )
+	void init_with_settings(context_settings const& setttings)
 	{
 		context_ = opencl::createContext(m_settings.m_device_type,
 				m_settings.m_platform_name, m_settings.m_useComputeUnits);
@@ -96,7 +97,6 @@ private:
 
 	}
 
-
 public:
 
 	~context()
@@ -108,6 +108,13 @@ public:
 		ERROR_HANDLER( ERROR = opencl::clReleaseCommandQueue( queue_ ));
 		ERROR_HANDLER( ERROR = opencl::clReleaseContext( context_ ));
 		//std::cout << std::endl << "OpenCL context freed";
+
+		if (sub_dev_id_ != NULL)
+		{
+			std::cout << std::endl << "# Releasing sub-device" << std::endl;
+			ERROR_HANDLER( ERROR = opencl::clReleaseDevice(sub_dev_id_));
+		}
+
 	}
 
 	cl_mem create_buffer(size_t buffer_size) const
@@ -309,7 +316,7 @@ private:
 
 	cl_context context_;
 	cl_command_queue queue_;
-	//cl_device_id m_devices;
+	cl_device_id sub_dev_id_;
 
 	std::auto_ptr<cl_device_id> m_devices;
 

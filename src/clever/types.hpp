@@ -51,7 +51,6 @@ public:
 	{
 		// free memory
 		// do explicit
-		std::cout << std::endl << "RELEASE";
 		opencl::clReleaseMemObject( get_mem() );
 	}
 
