@@ -47,6 +47,7 @@ public:
         ERROR_HANDLER( ERROR = opencl::clEnqueueWriteBuffer( ctx.default_queue(),
         		handle.get_mem() , CL_TRUE, 0, handle.value_entry_size * count, &input.front(), 0,
         		NULL, NULL ) );
+        std::cout << "Buffer written" << std::endl;
 	}
 
 	// download from device

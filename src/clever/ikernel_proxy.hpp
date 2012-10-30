@@ -28,6 +28,8 @@ public:
     		const clever::range & r,
     		const bool reverseParameters = false) const = 0;
 
+    virtual std::string const& getSource () const = 0;
+
 
 };
 

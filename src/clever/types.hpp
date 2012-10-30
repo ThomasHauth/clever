@@ -41,6 +41,11 @@ public:
 	{
 		return m_mem;
 	}
+	cl_mem & get_mem_ref()
+	{
+		return m_mem;
+	}
+
 
 	void set_mem( cl_mem new_mem )
 	{
@@ -182,6 +187,45 @@ public:
 
 
 };
+
+ // not one vector, but N vectors aligned in memory
+ template<class Type >
+ class object: public datatype_base
+ {
+ public:
+ 	typedef Type value_type;
+ 	typedef typename std::vector < Type > stdvector_type;
+
+ 	// size of one entry ( > here the object ) in bytes
+ 	static constexpr::size_t value_entry_size = sizeof(value_type);
+
+
+ 	explicit object( stdvector_type const& input_objects, context & c ) :
+ 				datatype_base(c, input_objects.size())
+ 	{
+ 		transfer::create(*this, input_objects, input_objects.size(), c );
+ 	}
+
+ 	// TODO: more interfacing here, for example smatrix
+ 	void to_array(stdvector_type & arr) const
+ 	{
+ 		transfer::download(*this, arr, get_context() );
+ 	}
+
+ 	void from_array(stdvector_type const& arr) const
+ 	{
+ 		transfer::upload(*this, arr, get_context() );
+ 	}
+
+ 	// todo: make this with constexpr
+ 	clever::range range() const
+ 	{
+ 		return clever::range( get_count() );
+ 	}
+
+ };
+
+
 
 }
 

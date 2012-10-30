@@ -19,9 +19,10 @@ namespace clever
 class kernel_proxy : public clever::ikernel_proxy
 {
 public:
-    kernel_proxy( const std::string& name,  cl_program program )
+    kernel_proxy( const std::string& name,  cl_program program, const std::string & program_soure )
        : program_( program )
     	, _kernel_name( name )
+    	, m_kernelSource ( program_soure)
 
     {
         ERROR_HANDLER( kernel_ = opencl::clCreateKernel( program_, name.c_str(), &ERROR ) );
@@ -77,6 +78,10 @@ public:
     	return evt;
     }
 
+    virtual std::string const& getSource() const
+    {
+    	return m_kernelSource;
+    }
 
     virtual void execute_params_var(
     		cl_context context, cl_command_queue queue,
@@ -91,5 +96,6 @@ private:
     cl_program program_;
     cl_kernel kernel_;
     std::string _kernel_name;
+    std::string m_kernelSource;
 };
 }

@@ -78,7 +78,7 @@ private:
 	void init_with_settings(context_settings const& setttings)
 	{
 		context_ = opencl::createContext(m_settings.m_device_type,
-				m_settings.m_platform_name, m_settings.m_useComputeUnits);
+				m_settings.m_platform_name, m_settings.m_useComputeUnits, &sub_dev_id_);
 		::size_t size;
 		ERROR_HANDLER(
 				ERROR = opencl::clGetContextInfo( context_, CL_CONTEXT_DEVICES, 0, NULL, &size ));
@@ -195,6 +195,8 @@ public:
 		boost::split(SplitVec, final_sources_str, boost::is_any_of(";"),
 				boost::token_compress_on);
 
+		std::stringstream final_source_linebreak;
+
 		size_t line_count = 0;
 		for (auto & one_line : SplitVec)
 		{
@@ -203,6 +205,8 @@ public:
 
 			line_buffer[line_count] = const_cast<char *>(one_line.c_str());
 			line_count++;
+
+			final_source_linebreak << one_line << std::endl;
 
 			//std::cout << std::endl << one_line;
 		}
@@ -218,7 +222,7 @@ public:
 		//std::cout << std::endl << build_options_;
 		// passing the build options here wastes the NVIDIA SDK somehow, even the option are "" ??s
 		//cl_int build_result = wrapper_.clBuildProgram( program, 0, NULL, build_options_.c_str(), NULL, NULL );
-		cl_int build_result = opencl::clBuildProgram(program, 0, NULL, "", NULL,
+		cl_int build_result = opencl::clBuildProgram(program, 0, NULL, "-cl-unsafe-math-optimizations -cl-fast-relaxed-math", NULL,
 				NULL);
 
 		char char_out[1024];
@@ -243,7 +247,7 @@ public:
 		//std::cout << "Compile done" << std::endl;
 
 		return std::auto_ptr<clever::ikernel_proxy>(
-				new clever::kernel_proxy(name, program));
+				new clever::kernel_proxy(name, program, final_source_linebreak.str() ));
 	}
 
 	void finish_default_queue() const

@@ -116,6 +116,8 @@ public:
 					CL_PARTITION_BY_COUNTS_LIST_END_EXT,
 					CL_PROPERTIES_LIST_END_EXT };
 
+			// use the 'ext' keyword up to now. OpenCL < version 1.2 does need this
+			// in OpenCL 1.2 it will become clCreateSubDevices
 			ERROR_HANDLER(
 					ERROR = ::clCreateSubDevicesEXT( devs[0], part_props, 1, device_id_part, &part_count));
 

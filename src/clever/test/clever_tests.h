@@ -12,5 +12,7 @@
 #include "clever_test_types.h"
 #include "clever_test_kernels.h"
 
+#include "serialize/test/clever_test_serialize.h"
+
 // platform specific tests
 #include "clever_test_runtime_intel.h"
