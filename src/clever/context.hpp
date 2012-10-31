@@ -132,14 +132,16 @@ public:
 		ERROR_HANDLER( ERROR = opencl::clReleaseMemObject( memory_handle ));
 	}
 
-	void transfer_to_buffer(cl_mem buffer_handle, void * buffer_data,
+	// transfar data from the device buffer to the host mem
+	void transfer_from_buffer(cl_mem buffer_handle, void * buffer_data,
 			size_t buffer_size) const
 	{
 		ERROR_HANDLER(
 				ERROR = opencl::clEnqueueReadBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, 0, NULL, NULL ));
 	}
 
-	void transfer_from_buffer(cl_mem buffer_handle, void * buffer_data,
+	// transfar data from the host to the device buffer
+	void transfer_to_buffer(cl_mem buffer_handle, void * buffer_data,
 			size_t buffer_size) const
 	{
 		ERROR_HANDLER(

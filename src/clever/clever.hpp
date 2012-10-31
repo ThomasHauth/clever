@@ -10,5 +10,7 @@
 #include "context_factory.hpp"
 #include "kernel.hpp"
 #include "types.hpp"
-
+#include "collection/Collection.hpp"
+#include "collection/CollectionView.h"
+#include "collection/OpenCLTransfer.h"
 

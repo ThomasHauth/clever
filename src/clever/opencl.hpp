@@ -8,7 +8,9 @@
 
 #pragma once
 
+#include <iostream>
 #include <stdexcept>
+#include <cassert>
 
 #include "cl_libs.h"
 #include "error.hpp"
@@ -94,8 +96,8 @@ public:
 	{
 		cl_context result;
 
-		cl_uint iMaxDeviceUnits = getPlatformDeviceMaxComputeUnits(dev_type,
-				platformName);
+		int iMaxDeviceUnits = int( getPlatformDeviceMaxComputeUnits(dev_type,
+				platformName));
 
 		cl_device_id devs[1];
 		devs[0] = getDeviceId(platformName, dev_type);

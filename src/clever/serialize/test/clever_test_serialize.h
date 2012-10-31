@@ -6,6 +6,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
 
+/*
 #pragma once
 
 #include <string>
@@ -42,6 +43,10 @@ class MyResultClass {
 
 		///st.transfer ("m_position", m_position);
 	}
+
+	float m_x;
+	float m_y;
+	float m_z;
 };
 
 class MyDataClass {
@@ -258,7 +263,7 @@ public:
 
 		// create access
 		// skip it, the code to use this is to verbose
-		/*
+
 		for ( auto & p: wbuffer.m_buffer  )
 		{
 			// get
@@ -274,11 +279,7 @@ public:
 			strAccess << "{" << std::endl;
 			strAccess << "   buffer [ index ] = newVal;" << std::endl;
 			strAccess << "}" << std::endl;
-		}*/
-		/*
-		 *
-		 * __kernel void add_val( const double a, const double b ) { }
-		 */
+		}
 		strKernel << "__kernel void " << kernel_name << "(" ;
 		size_t count = 0;
 		for ( auto & p: wbuffer.getBuffers()  )
@@ -291,8 +292,7 @@ public:
 				{
 				strKernel << "," << std::endl;
 				}
-/*			std::cout << "Creating & Transfering Buffer "  << p.first << std::endl;
-			p.second->transferToDevice () ;*/
+
 		}
 		strKernel << " ) {}";
 		return strAccess.str() +  strKernel.str ();
@@ -339,3 +339,4 @@ TEST( clever_serialize, transfer ) {
 	// todo: delete vector
 
 }
+*/
