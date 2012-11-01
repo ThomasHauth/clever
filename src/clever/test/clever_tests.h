@@ -11,6 +11,7 @@
 #include "clever_test_memory.h"
 #include "clever_test_types.h"
 #include "clever_test_kernels.h"
+#include "clever_test_collection.h"
 
 #include "../serialize/test/clever_test_serialize.h"
 

@@ -7,6 +7,9 @@
 namespace clever
 {
 
+/*
+
+*/
 template<typename THead = NullData, typename ... TTail>
 class Collection: public Collection<TTail ...>
 {
@@ -22,7 +25,7 @@ public:
 	template <typename T>
 	using internal_collection = std::vector< T >;
 
-	typedef int index_type;
+	typedef unsigned int index_type;
 
 	// necessary to unhide the set/get methods of the base classes
 	using inherited::setValue;
