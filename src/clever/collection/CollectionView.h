@@ -3,6 +3,11 @@
 namespace clever
 {
 
+/*
+	The CollectionView class provides an iterator to go over the elements contained in
+	a Colletion class. This view allows to access the content in a struct-like fashion
+	without caring about the underlying arrays.
+*/
 template<class TCollection>
 class CollectionView
 {
@@ -16,29 +21,31 @@ public:
 
 	}
 
-	// add entry
+	// add entry for this View.
+	// TODO: is this a good interface
 	CollectionView(TCollection & collection) :
 			m_col(collection)
 	{
 		m_index = m_col.addEntry();
 	}
 
-	/*	typedef typename TCollection::key_type key_type;
-	 typedef typename TCollection::data_type data_type;
-	 */
+	// return a value of the collection, identified by the respective
+	// DataType class
 	template<class TDataClass>
 	typename TDataClass::data_type getValue() const
 	{
 		return m_col.getValue(TDataClass(), m_index);
 	}
 
+	// set a value of the collection, identified by the respective
+	// DataType class
 	template<class TDataClass>
 	void setValue(typename TDataClass::data_type const& v)
 	{
 		m_col.setValue(TDataClass(), m_index, v);
 	}
 
-	// iterator implementation, not done yet
+	// TODO: iterator implementation, not done yet
 	// pre op
 	CollectionView& operator++()
 	{
@@ -46,7 +53,7 @@ public:
 		return *this;
 	}
 
-	// post op
+	// TODO: post op
 	CollectionView operator++(int)
 	{
 		CollectionView tmp(*this); //Kopier-Konstruktor

@@ -8,7 +8,14 @@ namespace clever
 {
 
 /*
+	The Collection class serves as a container for a set of related data arrays, like x,y,z position in space
+	The handling is very close to a class with x,y,z member variables but continious std::vectors are used
+	in the backend to store the data. All read/write to the data by the user via the CollectionView class.
 
+	Furthermore, the conntent of the Collection class can be easily transfered to OpenCL buffer without the need
+	to modify or adapt the memory layout of the stored data.
+
+	Please have a look at the test cases in clever_test_collection.h to get an idea of the usage modes.
 */
 template<typename THead = NullData, typename ... TTail>
 class Collection: public Collection<TTail ...>

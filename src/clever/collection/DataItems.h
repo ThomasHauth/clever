@@ -32,6 +32,9 @@ public:
 	}
 };
 
+
+// only used as a implementation detail.
+// TODO: hide better
 struct NullData
 {
 };
