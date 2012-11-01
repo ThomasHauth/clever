@@ -21,6 +21,17 @@ public:
 	}
 };
 
+template<>
+class TypeToCLType<unsigned int>
+{
+public:
+	typedef cl_uint cl_type;
+	static std::string str()
+	{
+		return "uint";
+	}
+};
+
 struct NullData
 {
 };
@@ -28,6 +39,11 @@ struct NullData
 struct FloatItem
 {
 	typedef float data_type;
+};
+
+struct UIntItem
+{
+	typedef unsigned int data_type;
 };
 
 }
