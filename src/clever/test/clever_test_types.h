@@ -83,6 +83,35 @@ TEST( clever_types, test_vector_type )
 	}
 }
 
+
+TEST( clever_types, test_scalar )
+{
+	clever::context context;
+
+	typedef clever::scalar <unsigned int> TestScalar;
+
+
+	// create clever vector, no initial values given
+	TestScalar m1(context, 23);
+
+	unsigned int myLocalInt = 5;
+	m1.toVariable( myLocalInt );
+
+	ASSERT_EQ( (unsigned int) 23, myLocalInt);
+
+
+	// create clever vector, no initial values given
+	TestScalar m2(context);
+
+	myLocalInt = 223;
+	unsigned int myOtherLocalInt = 0;
+
+	m1.fromVariable( myLocalInt );
+	m1.toVariable( myOtherLocalInt );
+
+	ASSERT_EQ( (unsigned int) 223, myOtherLocalInt);
+}
+
 TEST( clever_types, test_matrix_type )
 {
 	size_t count = 50;

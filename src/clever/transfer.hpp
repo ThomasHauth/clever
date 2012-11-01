@@ -50,6 +50,22 @@ public:
         std::cout << "Buffer written" << std::endl;
 	}
 
+	template < class TObject >
+	static void createScalar(
+			TObject & handle,
+			typename TObject::value_type const& initialValue,
+			icontext const & ctx)
+	{
+		// create buffer
+		create ( handle, 1, ctx );
+
+		// copy content
+        ERROR_HANDLER( ERROR = opencl::clEnqueueWriteBuffer( ctx.default_queue(),
+        		handle.get_mem() , CL_TRUE, 0, handle.value_entry_size , &initialValue, 0,
+        		NULL, NULL ) );
+        std::cout << "Buffer written" << std::endl;
+	}
+
 	// download from device
 	template < class TObject >
 	static void download( TObject const & handle,
@@ -68,6 +84,24 @@ public:
         		0, NULL, NULL ) );
 	}
 
+	// download from device
+	template < class TObject >
+	static void downloadScalar( TObject const & handle,
+			typename TObject::value_type & out,
+			icontext const& ctx,
+			bool synchronous = true)
+	{
+		assert ( handle.get_count() == 1 );
+
+        ERROR_HANDLER( ERROR = opencl::clEnqueueReadBuffer(
+        		ctx.default_queue(),
+        		handle.get_mem(),
+        		cl_syncmod( synchronous ), 0,
+        		handle.value_entry_size * handle.get_count(),
+        		&out,
+        		0, NULL, NULL ) );
+	}
+
 	// upload to device
 	template < class TObject >
 	static void upload( TObject const & handle,
@@ -82,6 +116,22 @@ public:
         		cl_syncmod( synchronous ),0,
         		handle.value_entry_size * handle.get_count(),
         		&input.front(),
+        		0, NULL, NULL ) );
+	}
+
+	template < class TObject >
+	static void uploadScalar( TObject const & handle,
+			typename TObject::value_type const& input,
+			icontext const& ctx,
+			bool synchronous = true)
+	{
+		assert (   handle.get_count() == 1 );
+
+        ERROR_HANDLER( ERROR = opencl::clEnqueueWriteBuffer( ctx.default_queue(),
+        		handle.get_mem(),
+        		cl_syncmod( synchronous ),0,
+        		handle.value_entry_size * handle.get_count(),
+        		&input ,
         		0, NULL, NULL ) );
 	}
 

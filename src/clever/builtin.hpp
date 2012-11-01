@@ -25,6 +25,9 @@ protected:
     unsigned int get_local_id( unsigned int ){ return 0; }
     unsigned int get_local_size( unsigned int ){ return 0; }
 
+    template <class TType >
+    TType atomic_inc( TType * p ) { return TType(); }
+
     double native_sqrt( double d ){ return 0.0; }
     double native_log( double d ){ return 0.0; }
 };
