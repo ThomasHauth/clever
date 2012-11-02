@@ -40,14 +40,14 @@ class parameter_factory
 public:
 	// Must use a vaule-by-reference as the pointer which is extracted and
 	// give to OpenCL must be valid outside of the scope of this function
-	static kernel_parameter * parameter( T & input);
+	inline static kernel_parameter * parameter( T & input);
 /*	{
 		//return new kernel_parameter( &input, sizeof ( T ) );
 		// use template specilization to support data types
 		assert ( false );
 	}*/
 
-	static std::string name ()
+	inline static std::string name ()
 	{
 		return "- name not set -";
 	}
@@ -55,27 +55,27 @@ public:
 };
 
 template <>
-kernel_parameter *parameter_factory < const double >::parameter( double const& input)
+inline kernel_parameter *parameter_factory < const double >::parameter( double const& input)
 {
 	return new kernel_parameter( &input, sizeof ( cl_double ), "double" );
 }
 
 template <>
-kernel_parameter *parameter_factory <  double >::parameter(  double & input)
+inline kernel_parameter *parameter_factory <  double >::parameter(  double & input)
 {
 	return new kernel_parameter( &input, sizeof ( cl_double ), "double"  );
 }
 
 
 template <>
-kernel_parameter *parameter_factory <  const cl_mem >::parameter( cl_mem const& input)
+inline kernel_parameter *parameter_factory <  const cl_mem >::parameter( cl_mem const& input)
 {
 	return new kernel_parameter( &input, sizeof ( cl_mem ), "cl_mem"  );
 }
 
 
 template <>
-kernel_parameter *parameter_factory <  cl_mem >::parameter( cl_mem &  input)
+inline kernel_parameter *parameter_factory <  cl_mem >::parameter( cl_mem &  input)
 {
 	return new kernel_parameter( &input, sizeof ( cl_mem ), "cl_mem" );
 }
@@ -83,27 +83,27 @@ kernel_parameter *parameter_factory <  cl_mem >::parameter( cl_mem &  input)
 
 
 template <>
-kernel_parameter *parameter_factory <  const int >::parameter( const int & input)
+inline kernel_parameter *parameter_factory <  const int >::parameter( const int & input)
 {
 	return new kernel_parameter( &input, sizeof ( cl_int ), "cl_int"  );
 }
 
 
 template <>
-kernel_parameter *parameter_factory < int >::parameter( int & input)
+inline kernel_parameter *parameter_factory < int >::parameter( int & input)
 {
 	return new kernel_parameter( &input, sizeof ( cl_int ), "cl_int"  );
 }
 
 
 template <>
-std::string parameter_factory < cl_mem >::name()
+inline std::string parameter_factory < cl_mem >::name()
 {
 	return "cl_mem";
 }
 
 template <>
-std::string parameter_factory < double >::name()
+inline std::string parameter_factory < double >::name()
 {
 	return "double";
 }

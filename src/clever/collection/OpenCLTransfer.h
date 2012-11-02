@@ -25,9 +25,9 @@ public:
 		const size_t bufferSize = sizeof(this_cl_type) * collection.size();
 		m_buffer = c.create_buffer(bufferSize);
 
-		std::cout << "Initializing buffer of type " << conversion_type::str()
+		/*std::cout << "Initializing buffer of type " << conversion_type::str()
 				<< " of size " << bufferSize << " bytes" << std::endl;
-
+*/
 		// handle the tail of the collection
 		inherited::initBuffers(c, collection);
 	}
@@ -37,8 +37,8 @@ public:
 		c.transfer_to_buffer(m_buffer, &collection.getRawBuffer().front(),
 				sizeof(this_cl_type) * collection.size());
 
-		std::cout << "writing value " << collection.getRawBuffer().front()
-				<< std::endl;
+	/*	std::cout << "writing value " << collection.getRawBuffer().front()
+				<< std::endl;*/
 
 		// todo: not so nice to store this here, maybe find a better way
 		m_transferedBufferSize = collection.size();
@@ -52,8 +52,8 @@ public:
 		c.transfer_from_buffer(m_buffer, &collection.getRawBuffer().front(),
 				sizeof(this_cl_type) * collection.size());
 
-		std::cout << "read value " << collection.getRawBuffer().front()
-				<< std::endl;
+		/*std::cout << "read value " << collection.getRawBuffer().front()
+				<< std::endl;*/
 
 		// will only operate on the tail
 		inherited::fromDevice(c, collection);
