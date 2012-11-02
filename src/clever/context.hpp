@@ -44,6 +44,17 @@ struct context_settings
 	cl_command_queue_properties m_cmd_queue_properties;
 	int m_useComputeUnits;
 
+	static context_settings default_gpu()
+	{
+		// TODO: make this more generic
+		return context_settings("NVIDIA CUDA", opencl::device_type::gpu);
+	}
+
+	static context_settings default_cpu()
+	{
+		return context_settings( );
+	}
+
 };
 
 struct source_modifier: public boost::noncopyable
@@ -78,7 +89,8 @@ private:
 	void init_with_settings(context_settings const& setttings)
 	{
 		context_ = opencl::createContext(m_settings.m_device_type,
-				m_settings.m_platform_name, m_settings.m_useComputeUnits, &sub_dev_id_);
+				m_settings.m_platform_name, m_settings.m_useComputeUnits,
+				&sub_dev_id_);
 		::size_t size;
 		ERROR_HANDLER(
 				ERROR = opencl::clGetContextInfo( context_, CL_CONTEXT_DEVICES, 0, NULL, &size ));
@@ -224,7 +236,8 @@ public:
 		//std::cout << std::endl << build_options_;
 		// passing the build options here wastes the NVIDIA SDK somehow, even the option are "" ??s
 		//cl_int build_result = wrapper_.clBuildProgram( program, 0, NULL, build_options_.c_str(), NULL, NULL );
-		cl_int build_result = opencl::clBuildProgram(program, 0, NULL, "-cl-unsafe-math-optimizations -cl-fast-relaxed-math", NULL,
+		cl_int build_result = opencl::clBuildProgram(program, 0, NULL,
+				"-cl-unsafe-math-optimizations -cl-fast-relaxed-math", NULL,
 				NULL);
 
 		char char_out[1024];
@@ -249,7 +262,8 @@ public:
 		//std::cout << "Compile done" << std::endl;
 
 		return std::auto_ptr<clever::ikernel_proxy>(
-				new clever::kernel_proxy(name, program, final_source_linebreak.str() ));
+				new clever::kernel_proxy(name, program,
+						final_source_linebreak.str()));
 	}
 
 	void finish_default_queue() const

@@ -16,7 +16,20 @@ public:
 
 	typedef TypeToCLType<typename THead::data_type> conversion_type;
 	typedef typename conversion_type::cl_type this_cl_type;
-	size_t item_size = sizeof(this_cl_type);
+	const size_t item_size = sizeof(this_cl_type);
+
+	OpenCLTransfer() :
+			m_homeContext(nullptr), m_buffer(0), m_transferedBufferSize(0)
+	{
+	}
+
+	~OpenCLTransfer()
+	{
+		if (m_homeContext != nullptr)
+		{
+			m_homeContext->release_buffer(m_buffer);
+		}
+	}
 
 	void initBuffers(context & c, dataitems_type const& collection)
 	{
@@ -25,9 +38,11 @@ public:
 		const size_t bufferSize = sizeof(this_cl_type) * collection.size();
 		m_buffer = c.create_buffer(bufferSize);
 
+		m_homeContext = &c;
+
 		/*std::cout << "Initializing buffer of type " << conversion_type::str()
-				<< " of size " << bufferSize << " bytes" << std::endl;
-*/
+		 << " of size " << bufferSize << " bytes" << std::endl;
+		 */
 		// handle the tail of the collection
 		inherited::initBuffers(c, collection);
 	}
@@ -37,8 +52,8 @@ public:
 		c.transfer_to_buffer(m_buffer, &collection.getRawBuffer().front(),
 				sizeof(this_cl_type) * collection.size());
 
-	/*	std::cout << "writing value " << collection.getRawBuffer().front()
-				<< std::endl;*/
+		/*	std::cout << "writing value " << collection.getRawBuffer().front()
+		 << std::endl;*/
 
 		// todo: not so nice to store this here, maybe find a better way
 		m_transferedBufferSize = collection.size();
@@ -53,7 +68,7 @@ public:
 				sizeof(this_cl_type) * collection.size());
 
 		/*std::cout << "read value " << collection.getRawBuffer().front()
-				<< std::endl;*/
+		 << std::endl;*/
 
 		// will only operate on the tail
 		inherited::fromDevice(c, collection);
@@ -87,6 +102,7 @@ public:
 
 // todo: can we do const here ?
 private:
+	context * m_homeContext;
 	cl_mem m_buffer;
 	size_t m_transferedBufferSize;
 };
