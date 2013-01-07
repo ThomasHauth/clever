@@ -17,7 +17,7 @@ include_directories (${clever_SOURCE_DIR}/src/clever)
 add_executable(clever_test src/test/clever_test.cpp ${GTEST_BASE}/src/gtest-all.cc )
 
 # open cl libs
-target_link_libraries(clever_test "OpenCL")
+target_link_libraries(clever_test "/usr/lib64/libOpenCL.so")
 
 
 ## Compiler flags
@@ -26,7 +26,7 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 
 	# most common fallback
     #set(CMAKE_CXX_COMPILER "g++-4.6.3")
-    set(CMAKE_CXX_COMPILER "/build/gcc/gcc-latest-bin/bin/g++")
+    # set(CMAKE_CXX_COMPILER "/build/gcc/gcc-latest-bin/bin/g++")
 
 endif()
 
