@@ -13,6 +13,20 @@
 namespace clever
 {
 
+#define  M_E_F           2.71828174591064f
+#define  M_LOG2E_F       1.44269502162933f
+#define  M_LOG10E_F      0.43429449200630f
+#define  M_LN2_F         0.69314718246460f
+#define  M_LN10_F        2.30258512496948f
+#define  M_PI_F          3.14159274101257f
+#define  M_PI_2_F        1.57079637050629f
+#define  M_PI_4_F        0.78539818525314f
+#define  M_1_PI_F        0.31830987334251f
+#define  M_2_PI_F        0.63661974668503f
+#define  M_2_SQRTPI_F    1.12837922573090f
+#define  M_SQRT2_F       1.41421353816986f
+#define  M_SQRT1_2_F     0.70710676908493f
+
 class vectorN {
 
 };
@@ -22,6 +36,11 @@ class vector2 : public vectorN{
 public:
 	T x;
 	T y;
+
+	vector2() {
+		x = 0;
+		y = 0;
+	}
 
 	vector2(T _x, T _y) {
 		x = _x;
@@ -34,6 +53,12 @@ class vector3 : public vectorN{
 	T x;
 	T y;
 	T z;
+
+	vector3() {
+		x = 0;
+		y = 0;
+		z = 0;
+	}
 
 	vector3(T _x, T _y, T _z) {
 		x = _x;
@@ -48,6 +73,13 @@ class vector4 : public vectorN{
 	T y;
 	T z;
 	T w;
+
+	vector4() {
+		x = 0;
+		y = 0;
+		z = 0;
+		w = 0;
+	}
 
 	vector4(T _x, T _y, T _z, T _w) {
 			x = _x;

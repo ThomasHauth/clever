@@ -32,6 +32,18 @@ public:
 	}
 };
 
+template<>
+class TypeToCLType<unsigned char>
+{
+public:
+	typedef cl_uchar cl_type;
+	static std::string str()
+	{
+		return "uchar";
+	}
+};
+
+typedef unsigned char uchar;
 
 // only used as a implementation detail.
 // TODO: hide better
@@ -47,6 +59,11 @@ struct FloatItem
 struct UIntItem
 {
 	typedef unsigned int data_type;
+};
+
+struct UCharDictionaryItem
+{
+	typedef uchar data_type;
 };
 
 }

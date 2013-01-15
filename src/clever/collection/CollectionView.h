@@ -21,6 +21,13 @@ public:
 
 	}
 
+	// point to somewhere (readonly)
+	CollectionView(const TCollection & collection, index_type i) :
+		m_col(const_cast<TCollection &>(collection)), m_index(i)
+	{
+
+	}
+
 	// add entry for this View.
 	// TODO: is this a good interface
 	CollectionView(TCollection & collection) :
