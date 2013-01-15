@@ -55,6 +55,18 @@ public:
 };
 
 template <>
+inline kernel_parameter *parameter_factory < const float >::parameter( float const& input)
+{
+	return new kernel_parameter( &input, sizeof ( cl_float ), "float" );
+}
+
+template <>
+inline kernel_parameter *parameter_factory <  float >::parameter(  float & input)
+{
+	return new kernel_parameter( &input, sizeof ( cl_float ), "float"  );
+}
+
+template <>
 inline kernel_parameter *parameter_factory < const double >::parameter( double const& input)
 {
 	return new kernel_parameter( &input, sizeof ( cl_double ), "double" );
@@ -100,6 +112,12 @@ template <>
 inline std::string parameter_factory < cl_mem >::name()
 {
 	return "cl_mem";
+}
+
+template <>
+inline std::string parameter_factory < float >::name()
+{
+	return "float";
 }
 
 template <>
