@@ -126,6 +126,8 @@ protected:
     double native_sqrt( double d ){ return 0.0; }
     double native_log( double d ){ return 0.0; }
 
+    double sign(double x) { return x > 0 ? 1 : -1; }
+
     //vectorN cross(vectorN a, vectorN b) { return a.cross(b); }
     //floatN normalize(floatN a) { return a.normalize(); }
 };
