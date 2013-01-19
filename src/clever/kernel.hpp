@@ -1,6 +1,7 @@
 //Auto-generated file clever/src/clever/code_gen/gen_kernelfile.py
 #pragma once
 #include "builtin.hpp"
+#include "kernel_base.hpp"
 #include "icontext.hpp"
 #include "error.hpp"
 #include <string>
@@ -8,100 +9,15 @@
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
 
-#define __kernel
-#define __local
-#define __global
-
 namespace clever
 {
 
-
-template< typename TStorage >
-class kernel_storage : protected clever::builtin
-{
-public:
-	kernel_storage( const std::string& name, const clever::icontext& context,
-			const std::string& sources, TStorage & storage  )
-        : context_( context )
-
-		, m_storage( storage )
-    {
-		std::stringstream kernelSignature;
-		kernelSignature << " __kernel void " << name << " ( ";
-		// generate the function header for this kernel
-		size_t count = 0;
-		for ( auto & p: m_storage.getBuffer()  )
-		{
-			// get
-			kernelSignature << "__global " << p.second->clTypePtr() << p.first;
-
-			count++;
-			if ( count < storage.getBuffer().size())
-			{
-				kernelSignature << "," << std::endl;
-			}
-			else
-			{
-				kernelSignature << ")" << std::endl;
-			}
-
-		}
-
-		kernelSignature << sources;
-
-		kernel_ = std::unique_ptr< clever::ikernel_proxy >( context.create( name, kernelSignature.str() ) );
-        assert ( kernel_ );
-    }
-    virtual ~kernel_storage(){}
-    cl_event run( TStorage & storage , range const& r ) const
-    {
-        kernel_parameter_list plist;
-
-		for ( auto & p: m_storage.getBuffer()  )
-		{
-			plist.push_back( parameter_factory< cl_mem >::parameter( p.second->getClBuffer() ));
-
-			//plist.push_back( new kernel_parameter( p.second->getClBuffer(), sizeof ( cl_mem ), "cl_mem" ));
-		}
-        return context_.execute_params( plist ,  *kernel_, r );
-    }
-
-    virtual std::string const& getSource() const
-    {
-    	return kernel_->getSource();
-    }
-
-private:
-
-    const clever::icontext& context_;
-
-    TStorage & m_storage;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
-};
-
-// todo: add the compilation of the function again
-#define APPLY_KERNEL_STORAGE_CLASS(  NAME, STORAGE , FUNCTION, SOURCES ) \
-class NAME##_CLASS : public clever::kernel_storage< STORAGE >                   \
-{                                                                           \
-public:                                                                     \
-    explicit NAME##_CLASS( const clever::icontext& context, STORAGE storage )              \
-                : clever::kernel_storage< STORAGE > ( #NAME, context, SOURCES, storage  )  \
-             {                                                              \
-             }                                                              \
-    virtual ~NAME##_CLASS() {}                                              \
-private:                                                                    \
-} NAME
-#define KERNEL_STORAGE_CLASS(  NAME,  STORAGE , FUNCTION_BODY )                \
-APPLY_KERNEL_STORAGE_CLASS(  NAME,  STORAGE , FUNCTION_BODY, #FUNCTION_BODY )
-
-
 template< typename T1 >
-class kernel_base1 : protected clever::builtin
+class kernel_base1 : public clever::kernel_base
 {
 public:
     kernel_base1( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -118,9 +34,6 @@ public:
     {
         run ( data1, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -141,12 +54,11 @@ APPLY_DEFINES1_CLASS(  NAME,  TYPE1 , FUNCTION, #FUNCTION )
 
 
 template< typename T1,typename T2 >
-class kernel_base2 : protected clever::builtin
+class kernel_base2 : public clever::kernel_base
 {
 public:
     kernel_base2( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -164,15 +76,6 @@ plist.push_back( parameter_factory< T2>::parameter( data2 ));
     {
         run ( data1,data2, r );
     }
-
-    std::string const& getSource () const
-    {
-    	return kernel_->getSource();
-    }
-
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -193,12 +96,11 @@ APPLY_DEFINES2_CLASS(  NAME,  TYPE1,TYPE2 , FUNCTION, #FUNCTION )
 
 
 template< typename T1,typename T2,typename T3 >
-class kernel_base3 : protected clever::builtin
+class kernel_base3 : public clever::kernel_base
 {
 public:
     kernel_base3( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -217,9 +119,6 @@ plist.push_back( parameter_factory< T3>::parameter( data3 ));
     {
         run ( data1,data2,data3, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -240,12 +139,11 @@ APPLY_DEFINES3_CLASS(  NAME,  TYPE1,TYPE2,TYPE3 , FUNCTION, #FUNCTION )
 
 
 template< typename T1,typename T2,typename T3,typename T4 >
-class kernel_base4 : protected clever::builtin
+class kernel_base4 : public clever::kernel_base
 {
 public:
     kernel_base4( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -265,9 +163,6 @@ plist.push_back( parameter_factory< T4>::parameter( data4 ));
     {
         run ( data1,data2,data3,data4, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -288,12 +183,11 @@ APPLY_DEFINES4_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4 , FUNCTION, #FUNCTION )
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5 >
-class kernel_base5 : protected clever::builtin
+class kernel_base5 : public clever::kernel_base
 {
 public:
     kernel_base5( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -314,9 +208,6 @@ plist.push_back( parameter_factory< T5>::parameter( data5 ));
     {
         run ( data1,data2,data3,data4,data5, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -337,12 +228,11 @@ APPLY_DEFINES5_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5 , FUNCTION, #FUNCTIO
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6 >
-class kernel_base6 : protected clever::builtin
+class kernel_base6 : public clever::kernel_base
 {
 public:
     kernel_base6( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -364,9 +254,6 @@ plist.push_back( parameter_factory< T6>::parameter( data6 ));
     {
         run ( data1,data2,data3,data4,data5,data6, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -387,12 +274,11 @@ APPLY_DEFINES6_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6 , FUNCTION, #F
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7 >
-class kernel_base7 : protected clever::builtin
+class kernel_base7 : public clever::kernel_base
 {
 public:
     kernel_base7( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -415,9 +301,6 @@ plist.push_back( parameter_factory< T7>::parameter( data7 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -438,12 +321,11 @@ APPLY_DEFINES7_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7 , FUNCTI
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8 >
-class kernel_base8 : protected clever::builtin
+class kernel_base8 : public clever::kernel_base
 {
 public:
     kernel_base8( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -467,9 +349,6 @@ plist.push_back( parameter_factory< T8>::parameter( data8 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -490,12 +369,11 @@ APPLY_DEFINES8_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8 , 
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9 >
-class kernel_base9 : protected clever::builtin
+class kernel_base9 : public clever::kernel_base
 {
 public:
     kernel_base9( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -520,9 +398,6 @@ plist.push_back( parameter_factory< T9>::parameter( data9 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -543,12 +418,11 @@ APPLY_DEFINES9_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,TY
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10 >
-class kernel_base10 : protected clever::builtin
+class kernel_base10 : public clever::kernel_base
 {
 public:
     kernel_base10( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -574,9 +448,6 @@ plist.push_back( parameter_factory< T10>::parameter( data10 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -597,12 +468,11 @@ APPLY_DEFINES10_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11 >
-class kernel_base11 : protected clever::builtin
+class kernel_base11 : public clever::kernel_base
 {
 public:
     kernel_base11( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -629,9 +499,6 @@ plist.push_back( parameter_factory< T11>::parameter( data11 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -652,12 +519,11 @@ APPLY_DEFINES11_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12 >
-class kernel_base12 : protected clever::builtin
+class kernel_base12 : public clever::kernel_base
 {
 public:
     kernel_base12( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -685,9 +551,6 @@ plist.push_back( parameter_factory< T12>::parameter( data12 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -708,12 +571,11 @@ APPLY_DEFINES12_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13 >
-class kernel_base13 : protected clever::builtin
+class kernel_base13 : public clever::kernel_base
 {
 public:
     kernel_base13( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -742,9 +604,6 @@ plist.push_back( parameter_factory< T13>::parameter( data13 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -765,12 +624,11 @@ APPLY_DEFINES13_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14 >
-class kernel_base14 : protected clever::builtin
+class kernel_base14 : public clever::kernel_base
 {
 public:
     kernel_base14( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -800,9 +658,6 @@ plist.push_back( parameter_factory< T14>::parameter( data14 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -823,12 +678,11 @@ APPLY_DEFINES14_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15 >
-class kernel_base15 : protected clever::builtin
+class kernel_base15 : public clever::kernel_base
 {
 public:
     kernel_base15( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -859,9 +713,6 @@ plist.push_back( parameter_factory< T15>::parameter( data15 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -882,12 +733,11 @@ APPLY_DEFINES15_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16 >
-class kernel_base16 : protected clever::builtin
+class kernel_base16 : public clever::kernel_base
 {
 public:
     kernel_base16( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -919,9 +769,6 @@ plist.push_back( parameter_factory< T16>::parameter( data16 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -942,12 +789,11 @@ APPLY_DEFINES16_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17 >
-class kernel_base17 : protected clever::builtin
+class kernel_base17 : public clever::kernel_base
 {
 public:
     kernel_base17( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -980,9 +826,6 @@ plist.push_back( parameter_factory< T17>::parameter( data17 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1003,12 +846,11 @@ APPLY_DEFINES17_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18 >
-class kernel_base18 : protected clever::builtin
+class kernel_base18 : public clever::kernel_base
 {
 public:
     kernel_base18( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1042,9 +884,6 @@ plist.push_back( parameter_factory< T18>::parameter( data18 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1065,12 +904,11 @@ APPLY_DEFINES18_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19 >
-class kernel_base19 : protected clever::builtin
+class kernel_base19 : public clever::kernel_base
 {
 public:
     kernel_base19( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1105,9 +943,6 @@ plist.push_back( parameter_factory< T19>::parameter( data19 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1128,12 +963,11 @@ APPLY_DEFINES19_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20 >
-class kernel_base20 : protected clever::builtin
+class kernel_base20 : public clever::kernel_base
 {
 public:
     kernel_base20( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1169,9 +1003,6 @@ plist.push_back( parameter_factory< T20>::parameter( data20 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1192,12 +1023,11 @@ APPLY_DEFINES20_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21 >
-class kernel_base21 : protected clever::builtin
+class kernel_base21 : public clever::kernel_base
 {
 public:
     kernel_base21( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1234,9 +1064,6 @@ plist.push_back( parameter_factory< T21>::parameter( data21 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1257,12 +1084,11 @@ APPLY_DEFINES21_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21,typename T22 >
-class kernel_base22 : protected clever::builtin
+class kernel_base22 : public clever::kernel_base
 {
 public:
     kernel_base22( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1300,9 +1126,6 @@ plist.push_back( parameter_factory< T22>::parameter( data22 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1323,12 +1146,11 @@ APPLY_DEFINES22_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21,typename T22,typename T23 >
-class kernel_base23 : protected clever::builtin
+class kernel_base23 : public clever::kernel_base
 {
 public:
     kernel_base23( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1367,9 +1189,6 @@ plist.push_back( parameter_factory< T23>::parameter( data23 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1390,12 +1209,11 @@ APPLY_DEFINES23_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21,typename T22,typename T23,typename T24 >
-class kernel_base24 : protected clever::builtin
+class kernel_base24 : public clever::kernel_base
 {
 public:
     kernel_base24( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1435,9 +1253,6 @@ plist.push_back( parameter_factory< T24>::parameter( data24 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1458,12 +1273,11 @@ APPLY_DEFINES24_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21,typename T22,typename T23,typename T24,typename T25 >
-class kernel_base25 : protected clever::builtin
+class kernel_base25 : public clever::kernel_base
 {
 public:
     kernel_base25( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1504,9 +1318,6 @@ plist.push_back( parameter_factory< T25>::parameter( data25 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1527,12 +1338,11 @@ APPLY_DEFINES25_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21,typename T22,typename T23,typename T24,typename T25,typename T26 >
-class kernel_base26 : protected clever::builtin
+class kernel_base26 : public clever::kernel_base
 {
 public:
     kernel_base26( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1574,9 +1384,6 @@ plist.push_back( parameter_factory< T26>::parameter( data26 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1597,12 +1404,11 @@ APPLY_DEFINES26_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21,typename T22,typename T23,typename T24,typename T25,typename T26,typename T27 >
-class kernel_base27 : protected clever::builtin
+class kernel_base27 : public clever::kernel_base
 {
 public:
     kernel_base27( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1645,9 +1451,6 @@ plist.push_back( parameter_factory< T27>::parameter( data27 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1668,12 +1471,11 @@ APPLY_DEFINES27_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21,typename T22,typename T23,typename T24,typename T25,typename T26,typename T27,typename T28 >
-class kernel_base28 : protected clever::builtin
+class kernel_base28 : public clever::kernel_base
 {
 public:
     kernel_base28( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1717,9 +1519,6 @@ plist.push_back( parameter_factory< T28>::parameter( data28 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1740,12 +1539,11 @@ APPLY_DEFINES28_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21,typename T22,typename T23,typename T24,typename T25,typename T26,typename T27,typename T28,typename T29 >
-class kernel_base29 : protected clever::builtin
+class kernel_base29 : public clever::kernel_base
 {
 public:
     kernel_base29( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1790,9 +1588,6 @@ plist.push_back( parameter_factory< T29>::parameter( data29 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1813,12 +1608,11 @@ APPLY_DEFINES29_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21,typename T22,typename T23,typename T24,typename T25,typename T26,typename T27,typename T28,typename T29,typename T30 >
-class kernel_base30 : protected clever::builtin
+class kernel_base30 : public clever::kernel_base
 {
 public:
     kernel_base30( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1864,9 +1658,6 @@ plist.push_back( parameter_factory< T30>::parameter( data30 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1887,12 +1678,11 @@ APPLY_DEFINES30_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21,typename T22,typename T23,typename T24,typename T25,typename T26,typename T27,typename T28,typename T29,typename T30,typename T31 >
-class kernel_base31 : protected clever::builtin
+class kernel_base31 : public clever::kernel_base
 {
 public:
     kernel_base31( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -1939,9 +1729,6 @@ plist.push_back( parameter_factory< T31>::parameter( data31 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,data31, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 
@@ -1962,12 +1749,11 @@ APPLY_DEFINES31_CLASS(  NAME,  TYPE1,TYPE2,TYPE3,TYPE4,TYPE5,TYPE6,TYPE7,TYPE8,T
 
 
 template< typename T1,typename T2,typename T3,typename T4,typename T5,typename T6,typename T7,typename T8,typename T9,typename T10,typename T11,typename T12,typename T13,typename T14,typename T15,typename T16,typename T17,typename T18,typename T19,typename T20,typename T21,typename T22,typename T23,typename T24,typename T25,typename T26,typename T27,typename T28,typename T29,typename T30,typename T31,typename T32 >
-class kernel_base32 : protected clever::builtin
+class kernel_base32 : public clever::kernel_base
 {
 public:
     kernel_base32( const std::string& name, const clever::icontext& context, const std::string& sources )
-        : context_( context )
-        , kernel_ ( context.create( name, sources ) )
+        : kernel_base(name, context, sources) 
     {
         assert ( kernel_ );
     }
@@ -2015,9 +1801,6 @@ plist.push_back( parameter_factory< T32>::parameter( data32 ));
     {
         run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,data31,data32, r );
     }
-private:
-    const clever::icontext& context_;
-    std::unique_ptr< clever::ikernel_proxy > kernel_;
 };
 
 

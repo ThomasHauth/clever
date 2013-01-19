@@ -4,16 +4,13 @@ max_params = 32
 file_header = "//Auto-generated file clever/src/clever/code_gen/gen_kernelfile.py\n\
 #pragma once\n\
 #include \"builtin.hpp\"\n\
+#include \"kernel_base.hpp\"\n\
 #include \"icontext.hpp\"\n\
 #include \"error.hpp\"\n\
 #include <string>\n\
 #include <algorithm>\n\
 #include <boost/function.hpp>\n\
 #include <boost/bind.hpp>\n\
-\n\
-#define __kernel\n\
-#define __local\n\
-#define __global\n\
 \n\
 namespace clever\n\
 {\n"
@@ -27,12 +24,11 @@ file_footer = "\n}"
 #   #parammethod#
 #   #paramcall#
 kernel_class_template="template< #paramtemplate# >\n\
-class kernel_base#paramnumber# : protected clever::builtin\n\
+class kernel_base#paramnumber# : public clever::kernel_base\n\
 {\n\
 public:\n\
     kernel_base#paramnumber#( const std::string& name, const clever::icontext& context, const std::string& sources )\n\
-        : context_( context )\n\
-        , kernel_ ( context.create( name, sources ) )\n\
+        : kernel_base(name, context, sources) \n\
     {\n\
         assert ( kernel_ );\n\
     }\n\
@@ -48,9 +44,6 @@ public:\n\
     {\n\
         run ( #paramcall# r );\n\
     }\n\
-private:\n\
-    const clever::icontext& context_;\n\
-    std::unique_ptr< clever::ikernel_proxy > kernel_;\n\
 };\n\n"
 
 kernel_defines = "#define APPLY_DEFINES#paramnumber#_CLASS(  NAME, #paramtypes# , FUNCTION, SOURCES ) \\\n\
