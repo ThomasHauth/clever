@@ -105,6 +105,7 @@ typedef vector2<uint> uint2;
 typedef vector3<uint> uint3;
 typedef vector4<uint> uint4;
 
+typedef size_t event_t;
 
 class builtin : private boost::noncopyable
 {
@@ -127,6 +128,8 @@ protected:
     double native_log( double d ){ return 0.0; }
 
     double sign(double x) { return x > 0 ? 1 : -1; }
+
+    event_t async_work_group_copy(void * dst, void * src, size_t num_gentypes, event_t event) { return (event_t) 0; }
 
     //vectorN cross(vectorN a, vectorN b) { return a.cross(b); }
     //floatN normalize(floatN a) { return a.normalize(); }

@@ -30,6 +30,7 @@ public:
 
     virtual std::string const& getSource () const = 0;
 
+    virtual cl_kernel native_kernel () const = 0;
 
 };
 

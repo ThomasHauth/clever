@@ -94,7 +94,11 @@ public:
 
     virtual void add_profile_event( cl_event evt, std::string evt_name ) = 0;
     virtual bool is_profile() const = 0;
-    virtual void report_profile( cl_event e, profile_info & pinfo) const = 0;
+    virtual profile_info report_profile(std::string evt_name) const = 0;
+    virtual profile_info report_profile( cl_event e) const = 0;
+
+    const std::string PROFILE_WRITE = "WRITE";
+    const std::string PROFILE_READ = "READ";
 
 
     // do all the memory management within the context ....

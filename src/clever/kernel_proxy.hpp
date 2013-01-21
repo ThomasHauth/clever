@@ -83,6 +83,10 @@ public:
     	return m_kernelSource;
     }
 
+    virtual cl_kernel native_kernel() const {
+    	return kernel_;
+    }
+
     virtual void execute_params_var(
     		cl_context context, cl_command_queue queue,
     		const clever::range & r,

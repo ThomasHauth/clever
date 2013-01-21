@@ -24,7 +24,21 @@ public:
     {
         assert ( kernel_ );
     }
+
     virtual ~kernel_base(){}
+
+    uint getWorkGroupSize() const {
+
+    	cl_device_id device;
+    	ERROR_HANDLER(
+    			ERROR = clGetCommandQueueInfo(context_.default_queue(), CL_QUEUE_DEVICE, sizeof(cl_device_id), &device, NULL));
+
+    	size_t workGroupSize;
+    	ERROR_HANDLER(
+    			ERROR = clGetKernelWorkGroupInfo(kernel_->native_kernel(), device, CL_KERNEL_WORK_GROUP_SIZE, sizeof(size_t), &workGroupSize, NULL));
+
+    	return workGroupSize;
+    }
 
 protected:
     const clever::icontext& context_;

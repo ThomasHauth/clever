@@ -9,6 +9,7 @@
 #pragma once
 
 #include <memory>
+#include <map>
 
 #include <boost/algorithm/string.hpp>
 
@@ -148,16 +149,25 @@ public:
 	void transfer_from_buffer(cl_mem buffer_handle, void * buffer_data,
 			size_t buffer_size) const
 	{
+		cl_event evt = m_profile_events[PROFILE_READ];
+
 		ERROR_HANDLER(
-				ERROR = opencl::clEnqueueReadBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, 0, NULL, NULL ));
+				ERROR = opencl::clEnqueueReadBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, 0, NULL, &evt ));
+
+		m_profile_events[PROFILE_READ] = evt;
 	}
 
 	// transfar data from the host to the device buffer
 	void transfer_to_buffer(cl_mem buffer_handle, void * buffer_data,
 			size_t buffer_size) const
 	{
+
+		cl_event evt = m_profile_events[PROFILE_WRITE];
+
 		ERROR_HANDLER(
-				ERROR = opencl::clEnqueueWriteBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, 0, NULL, NULL ));
+				ERROR = opencl::clEnqueueWriteBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, 0, NULL, &evt ));
+
+		m_profile_events[PROFILE_WRITE] = evt;
 	}
 
 	/*    virtual cl_mem download_buffer( cl_mem buffer, size_t size ) const = 0;
@@ -285,10 +295,6 @@ public:
 		return m_settings.m_useComputeUnits;
 	}
 
-	void add_profile_event(cl_event evt, std::string evt_name)
-	{
-
-	}
 
 	void add_source_modifier(source_modifier * mod)
 	{
@@ -300,8 +306,18 @@ public:
 		return m_settings.m_profile;
 	}
 
-	void report_profile(cl_event ev, profile_info & pinfo) const
+	void add_profile_event( cl_event evt, std::string evt_name ){
+		m_profile_events[evt_name] = evt;
+	}
+
+	profile_info report_profile(std::string evt_name) const {
+		return report_profile(m_profile_events[evt_name]);
+	}
+
+	profile_info report_profile(cl_event ev) const
 	{
+		profile_info pinfo;
+
 		ERROR_HANDLER(
 				ERROR = opencl::clGetEventProfilingInfo( ev, CL_PROFILING_COMMAND_QUEUED, sizeof ( cl_ulong), &pinfo.queued, NULL ));
 		ERROR_HANDLER(
@@ -310,6 +326,8 @@ public:
 				ERROR = opencl::clGetEventProfilingInfo( ev, CL_PROFILING_COMMAND_START, sizeof ( cl_ulong), &pinfo.start, NULL ));
 		ERROR_HANDLER(
 				ERROR = opencl::clGetEventProfilingInfo( ev, CL_PROFILING_COMMAND_END, sizeof ( cl_ulong), &pinfo.end, NULL ));
+
+		return pinfo;
 	}
 
 	/*
@@ -341,6 +359,7 @@ private:
 	std::auto_ptr<cl_device_id> m_devices;
 
 	boost::ptr_vector<source_modifier> m_source_modifier;
+	mutable std::map<std::string, cl_event> m_profile_events;
 };
 
 }

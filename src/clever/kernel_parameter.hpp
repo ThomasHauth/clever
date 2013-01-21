@@ -107,6 +107,19 @@ inline kernel_parameter *parameter_factory < int >::parameter( int & input)
 	return new kernel_parameter( &input, sizeof ( cl_int ), "cl_int"  );
 }
 
+template <>
+inline kernel_parameter *parameter_factory <  const uint >::parameter( const uint & input)
+{
+	return new kernel_parameter( &input, sizeof ( cl_uint ), "cl_uint"  );
+}
+
+
+template <>
+inline kernel_parameter *parameter_factory < uint >::parameter( uint & input)
+{
+	return new kernel_parameter( &input, sizeof ( cl_uint ), "cl_uint"  );
+}
+
 
 template <>
 inline std::string parameter_factory < cl_mem >::name()
@@ -124,6 +137,12 @@ template <>
 inline std::string parameter_factory < double >::name()
 {
 	return "double";
+}
+
+template <>
+inline std::string parameter_factory < uint >::name()
+{
+	return "uint";
 }
 
 /*
