@@ -113,16 +113,27 @@ public:
 
 			cl_uint part_count = 1;
 			cl_device_id device_id_part[1];
-			const cl_device_partition_property_ext part_props[] =
-			{ CL_DEVICE_PARTITION_BY_COUNTS_EXT,
-					(cl_device_partition_property_ext) limitComputeUnits,
-					CL_PARTITION_BY_COUNTS_LIST_END_EXT,
+#ifdef CL_VERSION_1_2
+			const cl_device_partition_property part_props[] =
+			{ CL_DEVICE_PARTITION_BY_COUNTS,
+					(cl_device_partition_property) limitComputeUnits,
+					CL_DEVICE_PARTITION_BY_COUNTS_LIST_END,
 					CL_PROPERTIES_LIST_END_EXT };
 
 			// use the 'ext' keyword up to now. OpenCL < version 1.2 does need this
 			// in OpenCL 1.2 it will become clCreateSubDevices
 			ERROR_HANDLER(
-					ERROR = ::clCreateSubDevicesEXT( devs[0], part_props, 1, device_id_part, &part_count));
+					ERROR = ::clCreateSubDevices( devs[0], part_props, 1, device_id_part, &part_count));
+#else
+			const cl_device_partition_property_ext part_props_ext[] =
+			{ CL_DEVICE_PARTITION_BY_COUNTS_EXT,
+					(cl_device_partition_property_ext) limitComputeUnits,
+					CL_PARTITION_BY_COUNTS_LIST_END_EXT,
+					CL_PROPERTIES_LIST_END_EXT };
+			ERROR_HANDLER(
+					ERROR = ::clCreateSubDevicesEXT( devs[0], part_props_ext, 1, device_id_part, &part_count));
+#endif
+
 
 			// we have a new device which must be used to create the context
 			devs[0] = device_id_part[0];
@@ -260,7 +271,11 @@ public:
 	}
 
 	static cl_int clReleaseDevice(cl_device_id dev) {
+#ifdef CL_VERSION_1_2
+		return ::clReleaseDevice( dev );
+#else
 		return ::clReleaseDeviceEXT( dev );
+#endif
 	}
 
 	static cl_kernel clCreateKernel(cl_program program, const char* kernel_name,
@@ -274,7 +289,7 @@ public:
 		return ::clReleaseKernel(clKernel);
 	}
 
-	static std::vector<platform_query> && query_platforms()
+	static std::vector<platform_query> query_platforms()
 	{
 		std::vector< platform_query > pis;
 
@@ -300,6 +315,8 @@ public:
 			pis.push_back( platform_query( char_out ) );
 
 		}
+
+		return pis;
 	}
 
 	static cl_platform_id getPlatformId(std::string platformName = "")
