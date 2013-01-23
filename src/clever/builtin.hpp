@@ -27,6 +27,8 @@ namespace clever
 #define  M_SQRT2_F       1.41421353816986f
 #define  M_SQRT1_2_F     0.70710676908493f
 
+#define CLK_LOCAL_MEM_FENCE 1
+
 class vectorN {
 
 };
@@ -37,12 +39,7 @@ public:
 	T x;
 	T y;
 
-	vector2() {
-		x = 0;
-		y = 0;
-	}
-
-	vector2(T _x, T _y) {
+	vector2(T _x = 0, T _y = 0) {
 		x = _x;
 		y = _y;
 	}
@@ -50,17 +47,12 @@ public:
 
 template <typename T>
 class vector3 : public vectorN{
+public:
 	T x;
 	T y;
 	T z;
 
-	vector3() {
-		x = 0;
-		y = 0;
-		z = 0;
-	}
-
-	vector3(T _x, T _y, T _z) {
+	vector3(T _x = 0, T _y = 0, T _z = 0) {
 		x = _x;
 		y = _y;
 		z = _z;
@@ -69,19 +61,13 @@ class vector3 : public vectorN{
 
 template <typename T>
 class vector4 : public vectorN{
+public:
 	T x;
 	T y;
 	T z;
 	T w;
 
-	vector4() {
-		x = 0;
-		y = 0;
-		z = 0;
-		w = 0;
-	}
-
-	vector4(T _x, T _y, T _z, T _w) {
+	vector4(T _x = 0, T _y = 0, T _z = 0, T _w = 0) {
 			x = _x;
 			y = _y;
 			z = _z;
@@ -120,6 +106,8 @@ protected:
     unsigned int get_local_size( unsigned int ){ return 0; }
 
     unsigned int atomic_or(unsigned int * x, unsigned int a) { return (*x) ^ a; }
+
+    void barrier(uint i) { };
 
     template <class TType >
     TType atomic_inc( TType * p ) { return TType(); }

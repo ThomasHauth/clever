@@ -34,6 +34,15 @@ public:
 
 };
 
+struct local_param {
+	size_t sizePerEntry;
+	size_t nEntries;
+
+	local_param(size_t sizePerEntry_, size_t nEntries)
+		: sizePerEntry( sizePerEntry_), nEntries( nEntries )
+	{ }
+};
+
 template < class  T >
 class parameter_factory
 {
@@ -118,6 +127,12 @@ template <>
 inline kernel_parameter *parameter_factory < uint >::parameter( uint & input)
 {
 	return new kernel_parameter( &input, sizeof ( cl_uint ), "cl_uint"  );
+}
+
+template <>
+inline kernel_parameter *parameter_factory < local_param >::parameter( local_param & input)
+{
+	return new kernel_parameter( NULL, input.nEntries * input.sizePerEntry, "__local"  );
 }
 
 
