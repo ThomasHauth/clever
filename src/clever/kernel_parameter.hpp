@@ -38,8 +38,8 @@ struct local_param {
 	size_t sizePerEntry;
 	size_t nEntries;
 
-	local_param(size_t sizePerEntry_, size_t nEntries)
-		: sizePerEntry( sizePerEntry_), nEntries( nEntries )
+	local_param(size_t sizePerEntry_, size_t nEntries_)
+		: sizePerEntry( sizePerEntry_), nEntries( nEntries_ )
 	{ }
 };
 
