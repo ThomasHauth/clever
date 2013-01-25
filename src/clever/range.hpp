@@ -54,6 +54,11 @@ public:
     const ::size_t* sizes() const { return &size_.front(); }
     const ::size_t dimension() const { return dimension_; }
 
+    ::size_t getSize( ::size_t dimension = 0 )
+    {
+    	return size_[dimension];
+    }
+
 private:
 	::size_t dimension_;
 	std::array < ::size_t, 3 > size_;
