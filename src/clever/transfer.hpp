@@ -89,17 +89,22 @@ public:
 	static void downloadScalar( TObject const & handle,
 			typename TObject::value_type & out,
 			icontext const& ctx,
-			bool synchronous = true)
+			bool synchronous = true,
+			uint offset = 0,
+			uint lengthWaitList = 0,
+			const cl_event * waitList = NULL)
 	{
-		assert ( handle.get_count() == 1 );
+		assert ( handle.get_count() >= offset );
+
+		offset = offset * handle.value_entry_size;
 
         ERROR_HANDLER( ERROR = opencl::clEnqueueReadBuffer(
         		ctx.default_queue(),
         		handle.get_mem(),
-        		cl_syncmod( synchronous ), 0,
-        		handle.value_entry_size * handle.get_count(),
+        		cl_syncmod( synchronous ), offset,
+        		handle.value_entry_size,
         		&out,
-        		0, NULL, NULL ) );
+        		lengthWaitList, waitList, NULL ) );
 	}
 
 	// upload to device
