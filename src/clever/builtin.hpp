@@ -29,6 +29,8 @@ namespace clever
 
 #define CLK_LOCAL_MEM_FENCE 1
 
+#define MAXFLOAT CL_MAXFLOAT
+
 class vectorN {
 
 };

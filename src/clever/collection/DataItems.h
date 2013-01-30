@@ -44,6 +44,7 @@ public:
 };
 
 typedef unsigned char uchar;
+typedef unsigned short ushort;
 
 // only used as a implementation detail.
 // TODO: hide better
