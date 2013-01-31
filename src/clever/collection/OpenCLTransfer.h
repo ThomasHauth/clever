@@ -62,16 +62,22 @@ public:
 		inherited::toDevice(c, collection);
 	}
 
-	void fromDevice(context & c, dataitems_type & collection)
+	void fromDevice(context & c, dataitems_type & collection, std::vector<cl_event> * waitList = NULL)
 	{
-		c.transfer_from_buffer(m_buffer, &collection.getRawBuffer().front(),
-				sizeof(this_cl_type) * collection.size());
+
+		if(waitList == NULL)
+			c.transfer_from_buffer(m_buffer, &collection.getRawBuffer().front(),
+					sizeof(this_cl_type) * collection.size());
+		else
+			//wait list not empty
+			c.transfer_from_buffer(m_buffer, &collection.getRawBuffer().front(),
+					sizeof(this_cl_type) * collection.size(), waitList->size(), waitList->data());
 
 		/*std::cout << "read value " << collection.getRawBuffer().front()
 		 << std::endl;*/
 
 		// will only operate on the tail
-		inherited::fromDevice(c, collection);
+		inherited::fromDevice(c, collection, waitList);
 	}
 
 	// necessary to unhide the  methods of the base classes
@@ -117,7 +123,7 @@ public:
 	void toDevice(context&, Collection<> const&)
 	{
 	}
-	void fromDevice(context&, Collection<> const&)
+	void fromDevice(context&, Collection<> const&, std::vector<cl_event> * = NULL)
 	{
 	}
 

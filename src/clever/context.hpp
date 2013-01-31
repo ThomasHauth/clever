@@ -147,12 +147,12 @@ public:
 
 	// transfar data from the device buffer to the host mem
 	void transfer_from_buffer(cl_mem buffer_handle, void * buffer_data,
-			size_t buffer_size) const
+			size_t buffer_size, size_t numEventsInWaitList = 0, const cl_event * waitList = NULL) const
 	{
 		cl_event evt = m_profile_events[PROFILE_READ];
 
 		ERROR_HANDLER(
-				ERROR = opencl::clEnqueueReadBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, 0, NULL, &evt ));
+				ERROR = opencl::clEnqueueReadBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, numEventsInWaitList, waitList, &evt ));
 
 		m_profile_events[PROFILE_READ] = evt;
 	}
