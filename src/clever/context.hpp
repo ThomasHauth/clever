@@ -330,15 +330,6 @@ public:
 		return pinfo;
 	}
 
-	/*
-	 virtual void execute_params_var(
-	 const openclam::ikernel_proxy& k,
-	 const openclam::range & r,
-	 kernel_parameter const& kp1) const
-	 {
-	 proxy.execute_params_var( k, r, kp1);
-	 }*/
-
 	const cl_command_queue default_queue() const
 	{
 		return queue_;

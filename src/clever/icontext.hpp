@@ -62,31 +62,10 @@ public:
     virtual std::auto_ptr< clever::ikernel_proxy > create( const std::string& name,
     		const std::string& sources ) const = 0;
 
-
-
     virtual cl_event execute_params( kernel_parameter_list const& parameter,
     		 const clever::ikernel_proxy& k,
     		 const clever::range & r,
     		 const bool reverseParameters = false ) const = 0;
-
-/*
-    virtual void execute_params_var(
-    		 const openclam::ikernel_proxy& k,
-    		 const openclam::range & r,
-    		 kernel_parameter const& kp1) const = 0;
-
-    virtual void execute_params_var(
-    		 const openclam::ikernel_proxy& k,
-    		 const openclam::range & r,
-    		 kernel_parameter const& kp1,
-    		 kernel_parameter const& kp2) const = 0;*/
-/*
-    virtual void execute_params_var(
-    		 const openclam::ikernel_proxy& k,
-    		 const openclam::range & r,
-    		 kernel_parameter const& kp1,
-    		 kernel_parameter const& kp2,
-    		 kernel_parameter const& kp3) const = 0;*/
 
     virtual const cl_command_queue default_queue() const = 0;
     virtual const cl_context native_context() const = 0;

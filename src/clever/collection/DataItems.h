@@ -22,6 +22,17 @@ public:
 };
 
 template<>
+class TypeToCLType<double>
+{
+public:
+	typedef cl_double cl_type;
+	static std::string str()
+	{
+		return "double";
+	}
+};
+
+template<>
 class TypeToCLType<unsigned int>
 {
 public:
@@ -54,6 +65,11 @@ struct NullData
 struct FloatItem
 {
 	typedef float data_type;
+};
+
+struct DoubleItem
+{
+	typedef double data_type;
 };
 
 struct UIntItem

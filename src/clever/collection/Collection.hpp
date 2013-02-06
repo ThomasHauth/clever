@@ -3,27 +3,27 @@
 #include "DataItems.h"
 #include "CollectionView.h"
 
-
 namespace clever
 {
 
 /*
-	The Collection class serves as a container for a set of related data arrays, like x,y,z position in space
-	The handling is very close to a class with x,y,z member variables but continious std::vectors are used
-	in the backend to store the data. All read/write to the data by the user via the CollectionView class.
+ The Collection class serves as a container for a set of related data arrays, like x,y,z position in space
+ The handling is very close to a class with x,y,z member variables but continious std::vectors are used
+ in the backend to store the data. All read/write to the data by the user via the CollectionView class.
 
-	Furthermore, the conntent of the Collection class can be easily transfered to OpenCL buffer without the need
-	to modify or adapt the memory layout of the stored data.
+ Furthermore, the conntent of the Collection class can be easily transfered to OpenCL buffer without the need
+ to modify or adapt the memory layout of the stored data.
 
-	Please have a look at the test cases in clever_test_collection.h to get an idea of the usage modes.
-*/
+ Please have a look at the test cases in clever_test_collection.h to get an idea of the usage modes.
+ */
 template<typename THead = NullData, typename ... TTail>
 class Collection: public Collection<TTail ...>
 {
 public:
 
 	typedef Collection<THead, TTail ...> own_type;
-	typedef CollectionView<own_type> iterator_type;
+	typedef CollectionIterator<own_type> iterator_type;
+	typedef CollectionView<own_type> view_type;
 	typedef Collection<TTail ...> inherited;
 
 	typedef THead key_type;
@@ -83,11 +83,22 @@ public:
 		return m_data[i];
 	}
 
+	iterator_type begin()
+	{
+		return iterator_type(*this, 0);
+	}
+
+	iterator_type end()
+	{
+		return iterator_type(*this, size());
+	}
+
 	// todo: no copy ...
+	/*
 	iterator_type getIterator()
 	{
 		return iterator_type(*this, index_type(0));
-	}
+	}*/
 
 	void setValue(key_type, index_type i, data_type const& v)
 	{
@@ -139,5 +150,19 @@ public:
 	 Data getValue() const;*/
 	void getValue() const;
 };
+/*
+template<class TCol>
+typename TCol::iterator_type begin(TCol & col)
+{
+	return col.getIterator();
+}*/
+/* todo
+template<class TCol>
+typename TCol::iterator_type end(TCol & col)
+{
+	// todo::
+	return col.getIterator();
+}
+*/
 
 }

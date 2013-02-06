@@ -83,7 +83,7 @@ struct opencl_error
     CODE;                        \
     if( ERROR != CL_SUCCESS ){   \
     	std::string serr = opencl_error::to_string ( ERROR ); \
-        throw std::runtime_error( "Openclam error '" + boost::lexical_cast< std::string >( ERROR ) + "' at : '" + #CODE + \
+        throw std::runtime_error( "clever error '" + boost::lexical_cast< std::string >( ERROR ) + "' at : '" + #CODE + \
 								  " Error Message: " + serr);  \
     }\
 }

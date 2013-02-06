@@ -54,15 +54,15 @@ TEST( clever_collection, collection_create )
 	const float f2 = 5.0f;
 	const unsigned int uint1 = 345;
 
-	auto it = col.getIterator();
+	auto it = col.begin();
 
-	it.setValue<TestFloat1>(f1);
-	it.setValue<TestFloat2>(f2);
-	it.setValue<TestUInt1>(uint1);
+	it->setValue<TestFloat1>(f1);
+	it->setValue<TestFloat2>(f2);
+	it->setValue<TestUInt1>(uint1);
 
-	GTEST_ASSERT_EQ( it.getValue<TestFloat1>( ), f1);
-	GTEST_ASSERT_EQ( it.getValue<TestFloat2>( ), f2);
-	GTEST_ASSERT_EQ( it.getValue<TestUInt1>( ), uint1);
+	GTEST_ASSERT_EQ( it->getValue<TestFloat1>( ), f1);
+	GTEST_ASSERT_EQ( it->getValue<TestFloat2>( ), f2);
+	GTEST_ASSERT_EQ( it->getValue<TestUInt1>( ), uint1);
 }
 
 TEST( clever_collection, collection_add )
@@ -81,15 +81,15 @@ TEST( clever_collection, collection_add )
 	// the size of the collection is now 1
 	GTEST_ASSERT_EQ( col.size(), (unsigned int) 1);
 
-	auto it = col.getIterator();
+	auto it = col.begin();
 
-	it.setValue<TestFloat1>(f1);
-	it.setValue<TestFloat2>(f2);
-	it.setValue<TestUInt1>(uint1);
+	it->setValue<TestFloat1>(f1);
+	it->setValue<TestFloat2>(f2);
+	it->setValue<TestUInt1>(uint1);
 
-	GTEST_ASSERT_EQ( it.getValue<TestFloat1>( ), f1);
-	GTEST_ASSERT_EQ( it.getValue<TestFloat2>( ), f2);
-	GTEST_ASSERT_EQ( it.getValue<TestUInt1>( ), uint1);
+	GTEST_ASSERT_EQ( it->getValue<TestFloat1>( ), f1);
+	GTEST_ASSERT_EQ( it->getValue<TestFloat2>( ), f2);
+	GTEST_ASSERT_EQ( it->getValue<TestUInt1>( ), uint1);
 }
 
 TEST( clever_collection, OpenCLTransfer )
@@ -110,11 +110,11 @@ TEST( clever_collection, OpenCLTransfer )
 	// the size of the collection is now 1
 	GTEST_ASSERT_EQ( col.size(), (unsigned int) 1);
 
-	auto it = col.getIterator();
+	auto it = col.begin();
 
-	it.setValue<TestFloat1>(f1);
-	it.setValue<TestFloat2>(f2);
-	it.setValue<TestUInt1>(uint1);
+	it->setValue<TestFloat1>(f1);
+	it->setValue<TestFloat2>(f2);
+	it->setValue<TestUInt1>(uint1);
 
 	TestCollectionTransfer clTrans;
 
@@ -123,11 +123,11 @@ TEST( clever_collection, OpenCLTransfer )
 	clTrans.toDevice(context, col);
 	clTrans.fromDevice(context, col);
 
-	auto it_new = col.getIterator();
+	auto it_new = col.begin();
 
-	GTEST_ASSERT_EQ( it_new.getValue<TestFloat1>( ), f1);
-	GTEST_ASSERT_EQ( it_new.getValue<TestFloat2>( ), f2);
-	GTEST_ASSERT_EQ( it_new.getValue<TestUInt1>( ), uint1);
+	GTEST_ASSERT_EQ( it_new->getValue<TestFloat1>( ), f1);
+	GTEST_ASSERT_EQ( it_new->getValue<TestFloat2>( ), f2);
+	GTEST_ASSERT_EQ( it_new->getValue<TestUInt1>( ), uint1);
 }
 
 TEST( clever_collection, OpenCLTransfer_large )

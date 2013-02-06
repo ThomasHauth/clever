@@ -88,6 +88,8 @@ public:
 		return range(m_transferedBufferSize);
 	}
 
+	// todo: check functions which can tell wether a buffer has been allocated / transfered to hardware
+
 	/*
 	 * 	std::vector <float> float_in ( elements, val );
 	 std::vector <float> float_out ( elements, 0.0f );

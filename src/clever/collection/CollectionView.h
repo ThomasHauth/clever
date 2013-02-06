@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cassert>
+#include <boost/iterator/iterator_facade.hpp>
+
+
 namespace clever
 {
 
@@ -52,6 +56,16 @@ public:
 		m_col.setValue(TDataClass(), m_index, v);
 	}
 
+	bool operator==(const CollectionView &other) const
+	{
+		return (other.m_index == this->m_index);
+	}
+
+	bool operator!=(const CollectionView &other) const
+	{
+		return !(*this == other);
+	}
+
 	// TODO: iterator implementation, not done yet
 	// pre op
 	CollectionView& operator++()
@@ -72,5 +86,50 @@ protected:
 	TCollection & m_col;
 	index_type m_index;
 };
+
+template<class TCollection>
+class CollectionIterator: public boost::iterator_facade<
+                CollectionIterator<TCollection>, typename TCollection::view_type,
+                boost::forward_traversal_tag>
+{
+public:
+
+        typedef typename TCollection::view_type view_type;
+
+        CollectionIterator(TCollection & collection, size_t initialPosition = 0) :
+                        m_view( collection, initialPosition)
+        {
+        }
+
+
+        explicit CollectionIterator( view_type * view)
+        {
+                // not implemented
+                assert ( false );
+        }
+
+private:
+        friend class boost::iterator_core_access;
+
+        void increment()
+        {
+                m_view++;
+        }
+
+        bool equal(CollectionIterator const& other) const
+        {
+                // when using pointers
+                //return this->m_view->operator==(*other.m_view);
+                return this->m_view == other.m_view;
+        }
+
+        view_type& dereference() const
+        {
+                return m_view;
+        }
+
+        mutable view_type   m_view;
+};
+
 
 }
