@@ -11,44 +11,35 @@
 #include <gtest/gtest.h>
 #include "../clever.hpp"
 
-struct ItemX: public clever::DoubleItem
-{
-};
-struct ItemY: public clever::DoubleItem
-{
-};
-struct ItemZ: public clever::DoubleItem
-{
-};
+// define the user's data items that are needed
+// all are double precision float, other data types are possible
+namespace UserVector {
+	struct ItemX: public clever::DoubleItem {};
+	struct ItemY: public clever::DoubleItem {};
+	struct ItemZ: public clever::DoubleItem {};
+	struct ItemMag: public clever::DoubleItem {};
+}
 
-struct ItemMag: public clever::DoubleItem
-{
-};
-
-#define VECTOR_COLLECTION_ITEMS ItemX, ItemY, ItemZ, ItemMag
-
-typedef clever::Collection<VECTOR_COLLECTION_ITEMS> VectorCollection;
-
-typedef clever::OpenCLTransfer<VECTOR_COLLECTION_ITEMS> VectorCollectionTransfer;
+// create an OpenCL Collection which can hold the users values on the host
+// side and transfer them to OpenCL devices
+typedef clever::OpenCLCollection<
+		UserVector::ItemX,
+		UserVector::ItemY,
+		UserVector::ItemZ,
+		UserVector::ItemMag > OpenCLVector;
 
 TEST( clever_example, kernel_run_on_data )
 {
-	clever::context contx;
-
 	const size_t elements = 10;
 
-	VectorCollection col;
-	VectorCollectionTransfer clTrans;
+	// create the OpenCL Context, in this case, the first OpenCL device available will be used
+	// more specific settings ( GPU or CPU ) are possible
+	clever::context contx;
 
-	for (size_t i = 0; i < elements; ++i)
-	{
-		col.addWithValue(double(i), double(i), double(i), 0.0f);
-	}
-
-	clTrans.initBuffers(contx, col);
-	clTrans.toDevice(contx, col);
-
-	// will be defined as variable "add_val" method local
+	// define the OpenCL kernel code and compile in for the concrete context
+	// this code fragment will also be compiled and syntax & type checked by gcc on the host side
+	// during compile time.
+	// During runtime, it will be handed to the OpenCL runtime for compilation.
 	KERNEL4_CLASS( computeMagnitude, cl_mem, cl_mem , cl_mem , cl_mem ,
 
 			double square( double a )
@@ -67,15 +58,37 @@ TEST( clever_example, kernel_run_on_data )
 			})
 	(contx);
 
-	computeMagnitude.run(clTrans.buffer(ItemX()), clTrans.buffer(ItemY()),
-			clTrans.buffer(ItemZ()), clTrans.buffer(ItemMag()),
+	// collection to hold the data items on the host side
+	OpenCLVector::collection_type col;
+	// collection to create and trasfer the OpenCL buffers to the device
+	OpenCLVector::transfer_type clTrans;
+
+	// fill some values
+	for (size_t i = 0; i < elements; ++i)
+	{
+		col.addWithValue(double(i), double(i), double(i), 0.0f);
+	}
+
+	// create Buffers on OpenCL side
+	clTrans.initBuffers(contx, col);
+	// transfer Buffers to device
+	clTrans.toDevice(contx, col);
+
+	// execute the OpenCL kernel with the buffers as input
+	computeMagnitude.run(clTrans.buffer(UserVector::ItemX()), clTrans.buffer(UserVector::ItemY()),
+			clTrans.buffer(UserVector::ItemZ()), clTrans.buffer(UserVector::ItemMag()),
 			clTrans.defaultRange());
 
+	// make sure all OpenCL kernels are finished, before accessing their result
+	contx.finish_default_queue();
+
+	// transfer the OpenCL bufer content back to the device
 	clTrans.fromDevice(contx, col);
 
+	// output the result
 	for ( auto const& entry : col )
 	{
-		std::cout << "Magnitude " << entry.getValue<ItemMag>() << std::endl;
+		std::cout << "Magnitude " << entry.getValue<UserVector::ItemMag>() << std::endl;
 	}
 }
 

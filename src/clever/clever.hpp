@@ -15,4 +15,5 @@
 #include "collection/Collection.hpp"
 #include "collection/CollectionView.h"
 #include "collection/OpenCLTransfer.h"
+#include "collection/OpenCLCollection.h"
 
