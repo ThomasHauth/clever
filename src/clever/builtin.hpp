@@ -32,8 +32,18 @@ namespace clever
 #define MAXFLOAT CL_MAXFLOAT
 
 class vectorN {
+public:
+	template <typename T>
+	T operator-(const T & rhs) const { //binary minus operator
+		return T();
+	}
 
 };
+
+template <typename T>
+T operator-(const T & lhs) { //unary minus operator
+		return T();
+	}
 
 template <typename T>
 class vector2 : public vectorN{
@@ -121,8 +131,11 @@ protected:
 
     event_t async_work_group_copy(void * dst, void * src, size_t num_gentypes, event_t event) { return (event_t) 0; }
 
-    //vectorN cross(vectorN a, vectorN b) { return a.cross(b); }
-    //floatN normalize(floatN a) { return a.normalize(); }
+    template <typename T>
+    T cross(T a, T b) { return T(); }
+
+    template <typename T>
+    T normalize(T a) { return T(); }
 };
 
 }
