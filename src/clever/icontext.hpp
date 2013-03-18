@@ -64,7 +64,7 @@ public:
 
     virtual cl_event execute_params( kernel_parameter_list const& parameter,
     		 const clever::ikernel_proxy& k,
-    		 const clever::range & globalRange, const clever::range * localRange = NULL,
+    		 const clever::range & globalRange, const clever::range & localRange,
     		 const bool reverseParameters = false ) const = 0;
 
     virtual const cl_command_queue default_queue() const = 0;

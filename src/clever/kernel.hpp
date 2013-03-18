@@ -22,7 +22,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base1(){}
-    cl_event run( T1 data1, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -30,9 +30,17 @@ public:
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1, range const& r )
+    cl_event run( T1 data1, const clever::range & globalRange) const
     {
-        run ( data1, r );
+        return run( data1, globalRange, null_range() );
+    }
+    void operator()( T1 data1, range const& globalRange, range const& localRange )
+    {
+        run ( data1, globalRange, localRange );
+    }
+    void operator()( T1 data1, range const& globalRange )
+    {
+        run ( data1, globalRange );
     }
 };
 
@@ -63,7 +71,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base2(){}
-    cl_event run( T1 data1,T2 data2, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -72,9 +80,17 @@ plist.push_back( parameter_factory< T2>::parameter( data2 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2, range const& r )
+    cl_event run( T1 data1,T2 data2, const clever::range & globalRange) const
     {
-        run ( data1,data2, r );
+        return run( data1,data2, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2, range const& globalRange )
+    {
+        run ( data1,data2, globalRange );
     }
 };
 
@@ -105,7 +121,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base3(){}
-    cl_event run( T1 data1,T2 data2,T3 data3, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -115,9 +131,17 @@ plist.push_back( parameter_factory< T3>::parameter( data3 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3, r );
+        return run( data1,data2,data3, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3, range const& globalRange )
+    {
+        run ( data1,data2,data3, globalRange );
     }
 };
 
@@ -148,7 +172,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base4(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -159,9 +183,17 @@ plist.push_back( parameter_factory< T4>::parameter( data4 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4, r );
+        return run( data1,data2,data3,data4, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4, globalRange );
     }
 };
 
@@ -192,7 +224,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base5(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -204,9 +236,17 @@ plist.push_back( parameter_factory< T5>::parameter( data5 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5, r );
+        return run( data1,data2,data3,data4,data5, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5, globalRange );
     }
 };
 
@@ -237,7 +277,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base6(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -250,9 +290,17 @@ plist.push_back( parameter_factory< T6>::parameter( data6 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6, r );
+        return run( data1,data2,data3,data4,data5,data6, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6, globalRange );
     }
 };
 
@@ -283,7 +331,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base7(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -297,9 +345,17 @@ plist.push_back( parameter_factory< T7>::parameter( data7 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7, r );
+        return run( data1,data2,data3,data4,data5,data6,data7, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7, globalRange );
     }
 };
 
@@ -330,7 +386,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base8(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -345,9 +401,17 @@ plist.push_back( parameter_factory< T8>::parameter( data8 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8, globalRange );
     }
 };
 
@@ -378,7 +442,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base9(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -394,9 +458,17 @@ plist.push_back( parameter_factory< T9>::parameter( data9 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9, globalRange );
     }
 };
 
@@ -427,7 +499,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base10(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -444,9 +516,17 @@ plist.push_back( parameter_factory< T10>::parameter( data10 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10, globalRange );
     }
 };
 
@@ -477,7 +557,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base11(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -495,9 +575,17 @@ plist.push_back( parameter_factory< T11>::parameter( data11 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11, globalRange );
     }
 };
 
@@ -528,7 +616,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base12(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -547,9 +635,17 @@ plist.push_back( parameter_factory< T12>::parameter( data12 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12, globalRange );
     }
 };
 
@@ -580,7 +676,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base13(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -600,9 +696,17 @@ plist.push_back( parameter_factory< T13>::parameter( data13 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13, globalRange );
     }
 };
 
@@ -633,7 +737,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base14(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -654,9 +758,17 @@ plist.push_back( parameter_factory< T14>::parameter( data14 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14, globalRange );
     }
 };
 
@@ -687,7 +799,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base15(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -709,9 +821,17 @@ plist.push_back( parameter_factory< T15>::parameter( data15 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15, globalRange );
     }
 };
 
@@ -742,7 +862,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base16(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -765,9 +885,17 @@ plist.push_back( parameter_factory< T16>::parameter( data16 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16, globalRange );
     }
 };
 
@@ -798,7 +926,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base17(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -822,9 +950,17 @@ plist.push_back( parameter_factory< T17>::parameter( data17 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17, globalRange );
     }
 };
 
@@ -855,7 +991,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base18(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -880,9 +1016,17 @@ plist.push_back( parameter_factory< T18>::parameter( data18 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18, globalRange );
     }
 };
 
@@ -913,7 +1057,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base19(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -939,9 +1083,17 @@ plist.push_back( parameter_factory< T19>::parameter( data19 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19, globalRange );
     }
 };
 
@@ -972,7 +1124,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base20(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -999,9 +1151,17 @@ plist.push_back( parameter_factory< T20>::parameter( data20 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20, globalRange );
     }
 };
 
@@ -1032,7 +1192,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base21(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1060,9 +1220,17 @@ plist.push_back( parameter_factory< T21>::parameter( data21 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21, globalRange );
     }
 };
 
@@ -1093,7 +1261,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base22(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1122,9 +1290,17 @@ plist.push_back( parameter_factory< T22>::parameter( data22 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22, globalRange );
     }
 };
 
@@ -1155,7 +1331,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base23(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1185,9 +1361,17 @@ plist.push_back( parameter_factory< T23>::parameter( data23 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23, globalRange );
     }
 };
 
@@ -1218,7 +1402,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base24(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1249,9 +1433,17 @@ plist.push_back( parameter_factory< T24>::parameter( data24 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24, globalRange );
     }
 };
 
@@ -1282,7 +1474,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base25(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1314,9 +1506,17 @@ plist.push_back( parameter_factory< T25>::parameter( data25 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25, globalRange );
     }
 };
 
@@ -1347,7 +1547,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base26(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1380,9 +1580,17 @@ plist.push_back( parameter_factory< T26>::parameter( data26 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26, globalRange );
     }
 };
 
@@ -1413,7 +1621,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base27(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1447,9 +1655,17 @@ plist.push_back( parameter_factory< T27>::parameter( data27 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27, globalRange );
     }
 };
 
@@ -1480,7 +1696,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base28(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1515,9 +1731,17 @@ plist.push_back( parameter_factory< T28>::parameter( data28 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28, globalRange );
     }
 };
 
@@ -1548,7 +1772,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base29(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1584,9 +1808,17 @@ plist.push_back( parameter_factory< T29>::parameter( data29 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29, globalRange );
     }
 };
 
@@ -1617,7 +1849,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base30(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1654,9 +1886,17 @@ plist.push_back( parameter_factory< T30>::parameter( data30 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30, globalRange );
     }
 };
 
@@ -1687,7 +1927,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base31(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1725,9 +1965,17 @@ plist.push_back( parameter_factory< T31>::parameter( data31 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,data31, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,data31, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,data31, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,data31, globalRange );
     }
 };
 
@@ -1758,7 +2006,7 @@ public:
         assert ( kernel_ );
     }
     virtual ~kernel_base32(){}
-    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31,T32 data32, const clever::range & globalRange, const clever::range * localRange = NULL ) const
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31,T32 data32, const clever::range & globalRange, const clever::range & localRange ) const
     {
         kernel_parameter_list plist;
         plist.push_back( parameter_factory< T1>::parameter( data1 ));
@@ -1797,9 +2045,17 @@ plist.push_back( parameter_factory< T32>::parameter( data32 ));
         assert ( kernel_ );
         return context_.execute_params( plist ,  *kernel_, globalRange, localRange );
     }
-    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31,T32 data32, range const& r )
+    cl_event run( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31,T32 data32, const clever::range & globalRange) const
     {
-        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,data31,data32, r );
+        return run( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,data31,data32, globalRange, null_range() );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31,T32 data32, range const& globalRange, range const& localRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,data31,data32, globalRange, localRange );
+    }
+    void operator()( T1 data1,T2 data2,T3 data3,T4 data4,T5 data5,T6 data6,T7 data7,T8 data8,T9 data9,T10 data10,T11 data11,T12 data12,T13 data13,T14 data14,T15 data15,T16 data16,T17 data17,T18 data18,T19 data19,T20 data20,T21 data21,T22 data22,T23 data23,T24 data24,T25 data25,T26 data26,T27 data27,T28 data28,T29 data29,T30 data30,T31 data31,T32 data32, range const& globalRange )
+    {
+        run ( data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12,data13,data14,data15,data16,data17,data18,data19,data20,data21,data22,data23,data24,data25,data26,data27,data28,data29,data30,data31,data32, globalRange );
     }
 };
 

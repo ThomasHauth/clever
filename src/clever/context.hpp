@@ -284,7 +284,7 @@ public:
 
 	cl_event execute_params(kernel_parameter_list const& parameter,
 			const clever::ikernel_proxy& proxy,
-			const clever::range & globalRange, const clever::range * localRange = NULL,
+			const clever::range & globalRange, const clever::range & localRange,
 			const bool reverseParameters = false) const
 	{
 		return proxy.execute_params(parameter, context_, queue_, globalRange, localRange,

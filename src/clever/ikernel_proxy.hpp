@@ -25,7 +25,7 @@ public:
 
     virtual cl_event execute_params( kernel_parameter_list const& parameter,
     		cl_context context, cl_command_queue queue,
-    		const clever::range & globalRange, const clever::range * localRange = NULL,
+    		const clever::range & globalRange, const clever::range & localRange,
     		const bool reverseParameters = false) const = 0;
 
     virtual std::string const& getSource () const = 0;

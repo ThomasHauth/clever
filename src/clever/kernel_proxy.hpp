@@ -43,7 +43,7 @@ public:
 
     virtual cl_event execute_params( kernel_parameter_list const& parameter,
     		cl_context context, cl_command_queue queue,
-    		const clever::range & globalRange, const clever::range * localRange = NULL,
+    		const clever::range & globalRange, const clever::range & localRange,
     		const bool reverseParameters = false) const
     {
     	// pass parameter
@@ -63,18 +63,12 @@ public:
     	}
 
     	cl_event evt = 0;
-
-    	const ::size_t * localSize = NULL;
-    	if(localRange != NULL){
-    		localSize = localRange->sizes();
-    	}
-
     	// enque kernel
     	ERROR_HANDLER( ERROR = opencl::clEnqueueNDRangeKernel( queue, kernel_,
     			globalRange.dimension(), //  work_dim
     			NULL, // global_work_offset
     			globalRange.sizes(), // global_work_size
-    			localSize , // local_work_size
+    			localRange.sizes() , // local_work_size
     			0, // num_events_in_wait_list
     			NULL, // event_wait_list
     			&evt) // event
