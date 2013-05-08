@@ -106,7 +106,7 @@ private:
 		}
 
 		ERROR_HANDLER(
-				queue_ = opencl::clCreateCommandQueue( context_, m_devices.get()[ 0 ], m_settings.m_cmd_queue_properties, &ERROR ));
+				queue_ = opencl::clCreateCommandQueue( context_, native_device(), m_settings.m_cmd_queue_properties, &ERROR ));
 
 	}
 
@@ -335,9 +335,24 @@ public:
 	{
 		return queue_;
 	}
+
 	const cl_context native_context() const
 	{
 		return context_;
+	}
+
+	const cl_device_id native_device() const
+	{
+		return m_devices.get()[0];
+	}
+
+	const cl_ulong getMaxAllocSize() const {
+
+		cl_ulong maxAlloc;
+		ERROR_HANDLER(
+			ERROR = clGetDeviceInfo(native_device(), CL_DEVICE_MAX_MEM_ALLOC_SIZE, sizeof(cl_ulong), &maxAlloc, NULL));
+
+		return maxAlloc;
 	}
 
 private:

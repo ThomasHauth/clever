@@ -69,7 +69,10 @@ public:
 
     virtual const cl_command_queue default_queue() const = 0;
     virtual const cl_context native_context() const = 0;
+    virtual const cl_device_id native_device() const = 0;
     virtual void finish_default_queue() const = 0;
+
+    virtual const cl_ulong getMaxAllocSize() const = 0;
 
     virtual void add_profile_event( cl_event evt, std::string evt_name ) = 0;
     virtual bool is_profile() const = 0;

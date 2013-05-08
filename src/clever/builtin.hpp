@@ -117,7 +117,12 @@ protected:
     unsigned int get_local_id( unsigned int ){ return 0; }
     unsigned int get_local_size( unsigned int ){ return 0; }
 
+    unsigned int get_group_id( unsigned int ){ return 0; }
+    unsigned int get_num_groups( unsigned int ){ return 0; }
+
     unsigned int atomic_or(unsigned int * x, unsigned int a) { return (*x) ^ a; }
+
+    unsigned int mul24(unsigned int a, unsigned int b){return a*b;}
 
     void barrier(uint i) { };
 
