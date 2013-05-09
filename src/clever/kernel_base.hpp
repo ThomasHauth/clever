@@ -18,11 +18,15 @@ namespace clever
 class kernel_base : protected clever::builtin
 {
 public:
-    kernel_base( const std::string& name, const clever::icontext& context, const std::string& sources )
+    kernel_base( const std::string& name, const clever::icontext& context, const std::string& sources, const std::string& preprocessor = "" )
         : context_( context )
-        , kernel_ ( context.create( name, sources ) )
     {
-        assert ( kernel_ );
+
+    	std::stringstream lSource;
+    	lSource << preprocessor << std::endl << sources;
+    	kernel_ = context.create( name, lSource.str() );
+
+    	assert ( kernel_ );
     }
 
     virtual ~kernel_base(){}

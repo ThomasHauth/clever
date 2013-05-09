@@ -27,8 +27,8 @@ kernel_class_template="template< #paramtemplate# >\n\
 class kernel_base#paramnumber# : public clever::kernel_base\n\
 {\n\
 public:\n\
-    kernel_base#paramnumber#( const std::string& name, const clever::icontext& context, const std::string& sources )\n\
-        : kernel_base(name, context, sources) \n\
+    kernel_base#paramnumber#( const std::string& name, const clever::icontext& context, const std::string& sources, const std::string& preprocessor )\n\
+        : kernel_base(name, context, sources, preprocessor) \n\
     {\n\
         assert ( kernel_ );\n\
     }\n\
@@ -54,20 +54,20 @@ public:\n\
     }\n\
 };\n\n"
 
-kernel_defines = "#define APPLY_DEFINES#paramnumber#_CLASS(  NAME, #paramtypes# , FUNCTION, SOURCES ) \\\n\
+kernel_defines = "#define APPLY_DEFINES#paramnumber#_CLASS(  NAME, #paramtypes# , FUNCTION, SOURCES, PREPROCESSOR ) \\\n\
 class NAME##_CLASS : public clever::kernel_base#paramnumber#< #paramtypes# >                   \\\n\
 {                                                                           \\\n\
 public:                                                                     \\\n\
     explicit NAME##_CLASS( const clever::icontext& context )              \\\n\
-                : clever::kernel_base#paramnumber#< #paramtypes#  >( #NAME, context, SOURCES )  \\\n\
+                : clever::kernel_base#paramnumber#< #paramtypes#  >( #NAME, context, SOURCES, PREPROCESSOR )  \\\n\
              {                                                              \\\n\
              }                                                              \\\n\
     virtual ~NAME##_CLASS() {}                                              \\\n\
 private:                                                                    \\\n\
     FUNCTION                                                               \\\n\
 } NAME                                                                      \n\
-#define KERNEL#paramnumber#_CLASS(  NAME,  #paramtypes# , FUNCTION )                \\\n\
-APPLY_DEFINES#paramnumber#_CLASS(  NAME,  #paramtypes# , FUNCTION, #FUNCTION )\n\n"
+#define KERNEL#paramnumber#_CLASS(  NAME,  #paramtypes# , FUNCTION ) APPLY_DEFINES#paramnumber#_CLASS(  NAME,  #paramtypes# , FUNCTION, #FUNCTION, \"\" ) \n\
+#define KERNEL#paramnumber#_CLASSP(  NAME,  #paramtypes# , PREPROCESSOR, FUNCTION ) APPLY_DEFINES#paramnumber#_CLASS(  NAME,  #paramtypes# , FUNCTION, #FUNCTION, PREPROCESSOR ) \n\n"
 
 print file_header
 
