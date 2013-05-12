@@ -128,6 +128,8 @@ protected:
 
     template <class TType >
     TType atomic_inc( TType * p ) { return TType(); }
+    template <class TType >
+    TType atomic_add( TType * p, TType v ) { return TType(); }
 
     double native_sqrt( double d ){ return 0.0; }
     double native_log( double d ){ return 0.0; }
