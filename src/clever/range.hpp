@@ -57,9 +57,21 @@ public:
     virtual const ::size_t* sizes() const { return &size_.front(); }
     virtual const ::size_t dimension() const { return dimension_; }
 
-    virtual ::size_t getSize( ::size_t dimension = 0 )
+    virtual ::size_t getSize( ::size_t dimension = 0 ) const
     {
     	return size_[dimension];
+    }
+
+    bool operator==(const range & rhs) const {
+    	if(this->dimension_ != rhs.dimension_)
+    		return false;
+
+    	for(uint i = 0; i < dimension_; ++i){
+    		if(this->size_[i] != rhs.size_[i])
+    			return false;
+    	}
+
+    	return true;
     }
 
 private:
@@ -73,7 +85,7 @@ public:
 	virtual const ::size_t* sizes() const { return NULL; }
 	virtual const ::size_t dimension() const { return 0; }
 
-	virtual ::size_t getSize( ::size_t dimension = 0 )
+	virtual ::size_t getSize( ::size_t dimension = 0 ) const
 	{
 		return 0;
 	}

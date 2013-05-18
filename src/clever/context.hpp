@@ -63,6 +63,102 @@ struct source_modifier: public boost::noncopyable
 	virtual void modify(std::string & src) const = 0;
 };
 
+
+struct tIOEvent{ //event, bytes transferred
+	cl_event event;
+	size_t bytes;
+	cl_ulong time;
+
+	tIOEvent() : event(0), bytes(0), time(0) { }
+	tIOEvent(cl_event e, size_t b) : event(e), bytes(b), time(0) { }
+
+	float bandwith(){
+		return time != 0 ? ((float) bytes) / time : 0;
+	}
+
+	tIOEvent operator+(const tIOEvent & rhs) const {
+		tIOEvent result;
+		result.time = this->time + rhs.time;
+		result.bytes = this->bytes + rhs.bytes;
+
+		return result;
+	}
+
+};
+
+typedef std::vector<tIOEvent> tIOEvents;
+
+struct tKernelEvent{ //kernel, event
+	cl_event event;
+	cl_kernel kernel;
+	std::string kernelName;
+	range globalSize;
+	range localSize;
+	cl_ulong time;
+	cl_ulong queued;
+
+	tKernelEvent() : event(0), kernel(0), time(0), queued(0) { }
+	tKernelEvent(cl_event e, cl_kernel k) : event(e), kernel(k), time(0), queued(0) { }
+
+	bool operator==(const tKernelEvent & rhs) const {
+		return this->event == rhs.event;
+	}
+
+	bool operator==(const cl_kernel & rhs) const {
+		return this->kernel == rhs;
+	}
+
+	bool operator==(const cl_event & e) const {
+		return this->event == e;
+	}
+
+	bool operator==(const std::string & s) const {
+			return kernelName == s;
+		}
+
+	uint items() const {
+		uint r = 1; //its reasonable to assume that the kernel processed at least one item
+		for(uint i = 0; i < globalSize.dimension(); ++i)
+			r *= globalSize.getSize(i);
+
+		return r;
+	}
+
+	uint threads() const {
+		uint r = 1; //its reasonable to assume that the kernel was processed by least one thread
+		for(uint i = 0; i < globalSize.dimension(); ++i)
+			r *= globalSize.getSize(i);
+
+		return r;
+	}
+
+	float runtimePerItem() const {
+		return time / items();
+	}
+
+	tKernelEvent operator+(const tKernelEvent & rhs) const {
+		tKernelEvent result;
+		result.time = this->time + rhs.time;
+		result.queued = this->queued + rhs.queued;
+
+		if(this->kernel == rhs.kernel)
+			result.kernel = this->kernel;
+
+		if(this->kernelName.compare(rhs.kernelName) == 0)
+			result.localSize = this->localSize;
+
+		if(this->globalSize == rhs.globalSize)
+			result.globalSize = this->globalSize;
+
+		if(this->localSize == rhs.localSize)
+					result.localSize = this->localSize;
+
+		return result;
+	}
+};
+
+typedef std::vector<tKernelEvent> tKernelEvents;
+
 class context: public clever::icontext
 {
 public:
@@ -149,12 +245,13 @@ public:
 	void transfer_from_buffer(cl_mem buffer_handle, void * buffer_data,
 			size_t buffer_size, size_t numEventsInWaitList = 0, const cl_event * waitList = NULL) const
 	{
-		cl_event evt = m_profile_events[PROFILE_READ];
+		cl_event evt;
 
 		ERROR_HANDLER(
 				ERROR = opencl::clEnqueueReadBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, numEventsInWaitList, waitList, &evt ));
 
-		m_profile_events[PROFILE_READ] = evt;
+		if(m_settings.m_profile)
+			m_profile_reads.push_back(tIOEvent(evt, buffer_size));
 	}
 
 	// transfar data from the host to the device buffer
@@ -162,12 +259,13 @@ public:
 			size_t buffer_size) const
 	{
 
-		cl_event evt = m_profile_events[PROFILE_WRITE];
+		cl_event evt;
 
 		ERROR_HANDLER(
 				ERROR = opencl::clEnqueueWriteBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, 0, NULL, &evt ));
 
-		m_profile_events[PROFILE_WRITE] = evt;
+		if(m_settings.m_profile)
+			m_profile_writes.push_back(tIOEvent(evt, buffer_size));
 	}
 
 	/*    virtual cl_mem download_buffer( cl_mem buffer, size_t size ) const = 0;
@@ -287,8 +385,21 @@ public:
 			const clever::range & globalRange, const clever::range & localRange,
 			const bool reverseParameters = false) const
 	{
-		return proxy.execute_params(parameter, context_, queue_, globalRange, localRange,
-				reverseParameters);
+
+		cl_event evt =  proxy.execute_params(parameter, context_, queue_, globalRange, localRange,
+					reverseParameters);
+
+		if(m_settings.m_profile){
+			tKernelEvent t( evt, proxy.native_kernel());
+			t.kernelName = proxy.name();
+			t.globalSize = globalRange;
+			t.localSize = localRange;
+
+			m_profile_kernels.push_back(t);
+
+		}
+
+		return evt;
 	}
 
 	int used_compute_units() const
@@ -307,14 +418,6 @@ public:
 		return m_settings.m_profile;
 	}
 
-	void add_profile_event( cl_event evt, std::string evt_name ){
-		m_profile_events[evt_name] = evt;
-	}
-
-	profile_info report_profile(std::string evt_name) const {
-		return report_profile(m_profile_events[evt_name]);
-	}
-
 	profile_info report_profile(cl_event ev) const
 	{
 		profile_info pinfo;
@@ -329,6 +432,104 @@ public:
 				ERROR = opencl::clGetEventProfilingInfo( ev, CL_PROFILING_COMMAND_END, sizeof ( cl_ulong), &pinfo.end, NULL ));
 
 		return pinfo;
+	}
+
+	tIOEvent getWritePerf() const {
+		tIOEvent result;
+
+		for(tIOEvent t : m_profile_writes){
+			result.time += report_profile(t.event).runtime();
+			result.bytes += t.bytes;
+		}
+
+		return result;
+	}
+
+	tIOEvent getReadPerf() const {
+		tIOEvent result;
+
+		for(tIOEvent t : m_profile_reads){
+			result.time += report_profile(t.event).runtime();
+			result.bytes += t.bytes;
+		}
+
+		return result;
+	}
+
+	tIOEvent getIOPerf(){
+		return getWritePerf() + getReadPerf();
+	}
+
+	tKernelEvent getKernelPerf(cl_event evt) const {
+
+		auto it =  std::find(m_profile_kernels.begin(), m_profile_kernels.end(), evt);
+		if(it == m_profile_kernels.end())
+			return tKernelEvent();
+
+		profile_info p = report_profile(it->event);
+		tKernelEvent e(*it);
+		e.time = p.runtime();
+		e.queued = p.timetostart();
+
+		return e;
+
+	}
+
+	tKernelEvents getKernelPerfs(cl_kernel kernel) const {
+
+		tKernelEvents r;
+
+		auto it = std::find(m_profile_kernels.begin(), m_profile_kernels.end(), kernel);
+		while(it != m_profile_kernels.end()){
+			profile_info p = report_profile(it->event);
+
+			tKernelEvent e(*it);
+			e.time = p.runtime();
+			e.queued = p.timetostart();
+
+			r.push_back(e);
+
+			it = std::find(it, m_profile_kernels.end(), kernel);
+		}
+
+		return r;
+	}
+
+	tKernelEvents getKernelPerfs(std::string kernel) const {
+
+		tKernelEvents r;
+
+		auto it = std::find(m_profile_kernels.begin(), m_profile_kernels.end(), kernel);
+		while(it != m_profile_kernels.end()){
+			profile_info p = report_profile(it->event);
+
+			tKernelEvent e(*it);
+			e.time = p.runtime();
+			e.queued = p.timetostart();
+
+			r.push_back(e);
+
+			it = std::find(it, m_profile_kernels.end(), kernel);
+		}
+
+		return r;
+	}
+
+	tKernelEvents getKernelPerfs() const {
+
+		tKernelEvents r;
+
+		for(auto & t : m_profile_kernels){
+			profile_info p = report_profile(t.event);
+
+			tKernelEvent e(t);
+			e.time = p.runtime();
+			e.queued = p.timetostart();
+
+			r.push_back(e);
+		}
+
+		return r;
 	}
 
 	const cl_command_queue default_queue() const
@@ -366,7 +567,10 @@ private:
 	std::auto_ptr<cl_device_id> m_devices;
 
 	boost::ptr_vector<source_modifier> m_source_modifier;
-	mutable std::map<std::string, cl_event> m_profile_events;
+
+	mutable tIOEvents m_profile_reads;
+	mutable tIOEvents m_profile_writes;
+	mutable tKernelEvents m_profile_kernels;
 };
 
 }

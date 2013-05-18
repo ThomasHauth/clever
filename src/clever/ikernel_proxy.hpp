@@ -32,6 +32,8 @@ public:
 
     virtual cl_kernel native_kernel () const = 0;
 
+    virtual std::string name() const =0;
+
 };
 
 }

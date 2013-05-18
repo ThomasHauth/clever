@@ -86,6 +86,10 @@ public:
     	return kernel_;
     }
 
+    virtual std::string name() const {
+    	return _kernel_name;
+    }
+
     virtual void execute_params_var(
     		cl_context context, cl_command_queue queue,
     		const clever::range & r,
