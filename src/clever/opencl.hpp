@@ -151,7 +151,7 @@ public:
 		}
 
 		ERROR_HANDLER(
-				result = ::clCreateContext( NULL, 1, devs, NULL, NULL, &ERROR ));
+				result = ::clCreateContext( NULL, 1, devs, &opencl::pfn_notify, NULL, &ERROR ));
 
 		return result;
 	}
@@ -448,6 +448,11 @@ public:
 			}
 
 		}
+	}
+
+	static void pfn_notify(const char *errinfo, const void *private_info, size_t cb, void *user_data)
+	{
+		fprintf(stderr, "OpenCL error: %s\n", errinfo);
 	}
 
 };
