@@ -218,6 +218,32 @@ public:
 		if(!allocatedMemory.empty()){
 			//std::cerr << "ERROR Unfreeded memory! " << allocatedMemory.size() << " objects unallocated" << std::endl;
 
+			clearAllBuffers();
+
+			assert(allocatedMemory.empty());
+		}
+
+		ERROR_HANDLER( ERROR = opencl::clReleaseCommandQueue( queue_ ));
+		ERROR_HANDLER( ERROR = opencl::clReleaseContext( context_ ));
+		//std::cout << std::endl << "OpenCL context freed";
+
+		if (sub_dev_id_ != NULL)
+		{
+			std::cout << std::endl << "# Releasing sub-device" << std::endl;
+			ERROR_HANDLER( ERROR = opencl::clReleaseDevice(sub_dev_id_));
+		}
+
+	}
+
+	void clearAllBuffers(){
+
+		//std::cout << std::endl << "Flushing command q to free OpenCL context";
+		ERROR_HANDLER( ERROR = opencl::clFlush( queue_ ));
+		ERROR_HANDLER( ERROR = opencl::clFinish( queue_ ));
+
+		if(!allocatedMemory.empty()){
+			//std::cerr << "ERROR Unfreeded memory! " << allocatedMemory.size() << " objects unallocated" << std::endl;
+
 			std::set<cl_mem> toDelete(allocatedMemory);
 
 			for(cl_mem m : toDelete){
@@ -231,16 +257,6 @@ public:
 		//ensure again that everything is fine after deletion
 		ERROR_HANDLER( ERROR = opencl::clFlush( queue_ ));
 		ERROR_HANDLER( ERROR = opencl::clFinish( queue_ ));
-
-		ERROR_HANDLER( ERROR = opencl::clReleaseCommandQueue( queue_ ));
-		ERROR_HANDLER( ERROR = opencl::clReleaseContext( context_ ));
-		//std::cout << std::endl << "OpenCL context freed";
-
-		if (sub_dev_id_ != NULL)
-		{
-			std::cout << std::endl << "# Releasing sub-device" << std::endl;
-			ERROR_HANDLER( ERROR = opencl::clReleaseDevice(sub_dev_id_));
-		}
 
 	}
 
