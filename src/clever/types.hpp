@@ -20,7 +20,7 @@ namespace clever
 class datatype_base: private boost::noncopyable
 {
 public:
-	datatype_base(icontext & context, size_t count) :
+	datatype_base(context & context, size_t count) :
 			m_context(context), m_count(count)
 	{
 
@@ -31,7 +31,7 @@ public:
 		return m_count;
 	}
 
-	icontext const& get_context() const
+	context const& get_context() const
 	{
 		return m_context;
 	}
@@ -58,7 +58,7 @@ public:
 	}
 
 private:
-	icontext & m_context;
+	context & m_context;
 	size_t m_count;
 
 	cl_mem m_mem;
@@ -78,26 +78,26 @@ public:
 	// size of one entry ( > one vector ) in bytes
 	static constexpr::size_t value_entry_size = D * sizeof(value_type);
 
-	explicit vector(icontext & c, size_t array_count = 1) :
+	explicit vector(context & c, size_t array_count = 1) :
 			datatype_base(c, array_count)
 	{
 		transfer::create(*this, array_count, c);
 	}
 
 	explicit vector(stdvector_type const & input, size_t array_count,
-			icontext & c) :
+			context & c) :
 			datatype_base(c, array_count)
 	{
 		transfer::create(*this, input, array_count, c);
 	}
 
-	explicit vector(stdvector_type const & input, icontext & c) :
+	explicit vector(stdvector_type const & input, context & c) :
 			datatype_base(c, input.size())
 	{
 		transfer::create(*this, input, input.size(), c);
 	}
 
-	explicit vector(value_type intial_value, size_t array_count, icontext & c) :
+	explicit vector(value_type intial_value, size_t array_count, context & c) :
 			datatype_base(c, array_count)
 	{
 		// TODO: could be improved, we have to use this temporary std::vector here
@@ -139,19 +139,19 @@ public:
 
 	typedef typename std::vector<Type> VectorType;
 
-	explicit matrix(icontext & c, size_t count = 1) :
+	explicit matrix(context & c, size_t count = 1) :
 			datatype_base(c, count)
 	{
 		transfer::create(*this, count, get_context());
 	}
 
-	explicit matrix(VectorType const & input, size_t count, icontext & c) :
+	explicit matrix(VectorType const & input, size_t count, context & c) :
 			datatype_base(c, count)
 	{
 		transfer::create(*this, input, count, get_context());
 	}
 
-	explicit matrix(value_type initial_value, size_t count, icontext & c) :
+	explicit matrix(value_type initial_value, size_t count, context & c) :
 			datatype_base(c, count)
 	{
 		std::vector<value_type> vtmp(count * value_elements, initial_value);

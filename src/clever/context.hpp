@@ -243,19 +243,19 @@ public:
 
 	// transfar data from the device buffer to the host mem
 	void transfer_from_buffer(cl_mem buffer_handle, void * buffer_data,
-			size_t buffer_size, size_t numEventsInWaitList = 0, const cl_event * waitList = NULL) const
+			size_t buffer_size, size_t numEventsInWaitList = 0, const cl_event * waitList = NULL, size_t offset = 0) const
 	{
 		cl_event evt;
 
 		ERROR_HANDLER(
-				ERROR = opencl::clEnqueueReadBuffer( this->default_queue(), buffer_handle, CL_TRUE, 0, buffer_size, buffer_data, numEventsInWaitList, waitList, &evt ));
+				ERROR = opencl::clEnqueueReadBuffer( this->default_queue(), buffer_handle, CL_TRUE, offset, buffer_size, buffer_data, numEventsInWaitList, waitList, &evt ));
 
 		if(m_settings.m_profile)
 			m_profile_reads.push_back(tIOEvent(evt, buffer_size));
 	}
 
 	// transfar data from the host to the device buffer
-	void transfer_to_buffer(cl_mem buffer_handle, void * buffer_data,
+	void transfer_to_buffer(cl_mem buffer_handle, const void * buffer_data,
 			size_t buffer_size) const
 	{
 
