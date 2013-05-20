@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <map>
+#include <set>
 
 #include <boost/algorithm/string.hpp>
 
@@ -214,6 +215,23 @@ public:
 		ERROR_HANDLER( ERROR = opencl::clFlush( queue_ ));
 		ERROR_HANDLER( ERROR = opencl::clFinish( queue_ ));
 
+		if(!allocatedMemory.empty()){
+			//std::cerr << "ERROR Unfreeded memory! " << allocatedMemory.size() << " objects unallocated" << std::endl;
+
+			std::set<cl_mem> toDelete(allocatedMemory);
+
+			for(cl_mem m : toDelete){
+				//std::cout << "Unallocating " << m << std::endl;
+				release_buffer(m);
+			}
+
+			assert(allocatedMemory.empty());
+		}
+
+		//ensure again that everything is fine after deletion
+		ERROR_HANDLER( ERROR = opencl::clFlush( queue_ ));
+		ERROR_HANDLER( ERROR = opencl::clFinish( queue_ ));
+
 		ERROR_HANDLER( ERROR = opencl::clReleaseCommandQueue( queue_ ));
 		ERROR_HANDLER( ERROR = opencl::clReleaseContext( context_ ));
 		//std::cout << std::endl << "OpenCL context freed";
@@ -233,12 +251,21 @@ public:
 				buff = opencl::clCreateBuffer( this->native_context(), CL_MEM_READ_WRITE, // | CL_MEM_USE_HOST_PTR,
 				buffer_size, NULL, &ERROR ));
 
+		allocatedMemory.insert(buff);
+		//std::cout << "created " << buff << std::endl;
+
 		return buff;
 	}
 
-	void release_buffer(cl_mem memory_handle)
+	void release_buffer(cl_mem memory_handle) const
 	{
+		size_t r = allocatedMemory.erase(memory_handle);
+
+		//if(r != 1)
+			//std::cerr << "Could not remove memory object: " << memory_handle << std::endl;
+
 		ERROR_HANDLER( ERROR = opencl::clReleaseMemObject( memory_handle ));
+
 	}
 
 	// transfar data from the device buffer to the host mem
@@ -571,6 +598,9 @@ private:
 	mutable tIOEvents m_profile_reads;
 	mutable tIOEvents m_profile_writes;
 	mutable tKernelEvents m_profile_kernels;
+
+	mutable std::set<cl_mem> allocatedMemory;
+
 };
 
 }

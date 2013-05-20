@@ -54,7 +54,7 @@ public:
 	{
 		// free memory
 		// do explicit
-		opencl::clReleaseMemObject(get_mem());
+		m_context.release_buffer(get_mem());
 	}
 
 private:
