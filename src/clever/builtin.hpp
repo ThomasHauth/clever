@@ -87,21 +87,95 @@ public:
 		}
 };
 
+template <typename T>
+class vector8 : public vectorN{
+public:
+	T i0;
+	T i1;
+	T i2;
+	T i3;
+	T i4;
+	T i5;
+	T i6;
+	T i7;
+
+	vector8(T _0 = 0,T _1 = 0, T _2 = 0, T _3 = 0, T _4 = 0, T _5 = 0, T _6 = 0, T _7 = 0) {
+		i0 = _0;
+		i1 = _1;
+		i2 = _2;
+		i3 = _3;
+		i4 = _4;
+		i5 = _5;
+		i6 = _6;
+		i7 = _7;
+	}
+};
+
+template <typename T>
+class vector16 : public vectorN{
+public:
+	T i0;
+	T i1;
+	T i2;
+	T i3;
+	T i4;
+	T i5;
+	T i6;
+	T i7;
+	T i8;
+	T i9;
+	T iA;
+	T iB;
+	T iC;
+	T iD;
+	T iE;
+	T iF;
+
+	vector16(T _0 = 0, T _1 = 0, T _2 = 0, T _3 = 0, T _4 = 0, T _5 = 0, T _6 = 0, T _7 = 0,
+			  T _8 = 0, T _9 = 0, T _a = 0, T _b = 0, T _c = 0, T _d = 0, T _e = 0, T _f = 0) {
+
+		i0 = _0;
+		i1 = _1;
+		i2 = _2;
+		i3 = _3;
+		i4 = _4;
+		i5 = _5;
+		i6 = _6;
+		i7 = _7;
+		i8 = _8;
+		i9 = _9;
+		iA = _a;
+		iB = _b;
+		iC = _c;
+		iD = _d;
+		iE = _e;
+		iF = _f;
+		}
+};
+
 typedef vector2<float> float2;
 typedef vector3<float> float3;
 typedef vector4<float> float4;
+typedef vector8<float> float8;
+typedef vector16<float> float16;
 
 typedef vector2<double> double2;
 typedef vector3<double> double3;
 typedef vector4<double> double4;
+typedef vector8<double> double8;
+typedef vector16<double> double16;
 
 typedef vector2<int> int2;
 typedef vector3<int> int3;
 typedef vector4<int> int4;
+typedef vector8<int> int8;
+typedef vector16<int> int16;
 
 typedef vector2<uint> uint2;
 typedef vector3<uint> uint3;
 typedef vector4<uint> uint4;
+typedef vector8<uint> uint8;
+typedef vector16<uint> uint16;
 
 typedef size_t event_t;
 
