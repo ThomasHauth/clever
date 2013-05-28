@@ -575,6 +575,12 @@ public:
 		return r;
 	}
 
+	void clearPerfCounters() {
+		m_profile_kernels.clear();
+		m_profile_reads.clear();
+		m_profile_writes.clear();
+	}
+
 	const cl_command_queue default_queue() const
 	{
 		return queue_;
