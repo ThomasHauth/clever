@@ -103,6 +103,7 @@ public:
 		cl_device_id devs[1];
 		devs[0] = getDeviceId(platformName, dev_type);
 
+#ifdef CL_VERSION_1_2
 		if ((limitComputeUnits > 0) && (limitComputeUnits < iMaxDeviceUnits)) // disallow aliasing
 		{
 
@@ -113,7 +114,7 @@ public:
 
 			cl_uint part_count = 1;
 			cl_device_id device_id_part[1];
-#ifdef CL_VERSION_1_2
+
 			const cl_device_partition_property part_props[] =
 			{ CL_DEVICE_PARTITION_BY_COUNTS,
 					(cl_device_partition_property) limitComputeUnits,
@@ -124,16 +125,6 @@ public:
 			// in OpenCL 1.2 it will become clCreateSubDevices
 			ERROR_HANDLER(
 					ERROR = ::clCreateSubDevices( devs[0], part_props, 1, device_id_part, &part_count));
-#else
-			const cl_device_partition_property_ext part_props_ext[] =
-			{ CL_DEVICE_PARTITION_BY_COUNTS_EXT,
-					(cl_device_partition_property_ext) limitComputeUnits,
-					CL_PARTITION_BY_COUNTS_LIST_END_EXT,
-					CL_PROPERTIES_LIST_END_EXT };
-			ERROR_HANDLER(
-					ERROR = ::clCreateSubDevicesEXT( devs[0], part_props_ext, 1, device_id_part, &part_count));
-#endif
-
 
 			// we have a new device which must be used to create the context
 			devs[0] = device_id_part[0];
@@ -144,6 +135,7 @@ public:
 			}
 
 		}
+#endif
 
 		if ( limitComputeUnits >= iMaxDeviceUnits )
 		{
@@ -274,7 +266,7 @@ public:
 #ifdef CL_VERSION_1_2
 		return ::clReleaseDevice( dev );
 #else
-		return ::clReleaseDeviceEXT( dev );
+		return 0;
 #endif
 	}
 
