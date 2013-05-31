@@ -197,6 +197,7 @@ protected:
     unsigned int atomic_or(unsigned int * x, unsigned int a) { return (*x) ^ a; }
 
     unsigned int mul24(unsigned int a, unsigned int b){return a*b;}
+    unsigned int popcount(unsigned int a) { return 0; }
 
     void barrier(uint i) { };
 
