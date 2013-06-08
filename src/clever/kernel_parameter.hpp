@@ -55,6 +55,13 @@ struct local_param {
 		return r;
 	}
 
+	local_param operator*(const uint a) const {
+		local_param r(*this);
+		r.nEntries *= a;
+
+		return r;
+	}
+
 	bool operator<(size_t bytes) const{
 		return this->sizePerEntry * this->nEntries < bytes;
 	}
