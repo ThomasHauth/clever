@@ -73,6 +73,9 @@ public:
     virtual void finish_default_queue() const = 0;
 
     virtual const cl_ulong getMaxAllocSize() const = 0;
+    virtual const cl_ulong getGlobalMemSize() const = 0;
+    virtual const cl_ulong getLocalMemSize() const = 0;
+
 
     virtual bool is_profile() const = 0;
     virtual profile_info report_profile( cl_event e) const = 0;

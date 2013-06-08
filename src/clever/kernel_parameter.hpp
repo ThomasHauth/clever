@@ -41,6 +41,39 @@ struct local_param {
 	local_param(size_t sizePerEntry_, size_t nEntries_)
 		: sizePerEntry( sizePerEntry_), nEntries( nEntries_ )
 	{ }
+
+	local_param operator+(const local_param & a) const {
+		local_param r(*this);
+
+		if(r.sizePerEntry == a.sizePerEntry){
+			r.nEntries += a.nEntries;
+		} else {
+			r.sizePerEntry = r.sizePerEntry * r.nEntries + a.sizePerEntry * a.nEntries;
+			r.nEntries = 1;
+		}
+
+		return r;
+	}
+
+	bool operator<(size_t bytes) const{
+		return this->sizePerEntry * this->nEntries < bytes;
+	}
+
+	bool operator<=(size_t bytes) const{
+		return this->sizePerEntry * this->nEntries <= bytes;
+	}
+
+	bool operator==(size_t bytes) const{
+		return this->sizePerEntry * this->nEntries == bytes;
+	}
+
+	bool operator>=(size_t bytes) const{
+		return this->sizePerEntry * this->nEntries >= bytes;
+	}
+
+	bool operator>(size_t bytes) const{
+		return this->sizePerEntry * this->nEntries > bytes;
+	}
 };
 
 template < class  T >

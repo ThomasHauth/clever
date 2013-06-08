@@ -605,6 +605,24 @@ public:
 		return maxAlloc;
 	}
 
+	const cl_ulong getGlobalMemSize() const {
+
+		cl_ulong memSize;
+		ERROR_HANDLER(
+				ERROR = clGetDeviceInfo(native_device(), CL_DEVICE_GLOBAL_MEM_SIZE, sizeof(cl_ulong), &memSize, NULL));
+
+		return memSize;
+	}
+
+	const cl_ulong getLocalMemSize() const {
+
+		cl_ulong memSize;
+		ERROR_HANDLER(
+				ERROR = clGetDeviceInfo(native_device(), CL_DEVICE_LOCAL_MEM_SIZE, sizeof(cl_ulong), &memSize, NULL));
+
+		return memSize;
+	}
+
 private:
 
 	context_settings m_settings;
