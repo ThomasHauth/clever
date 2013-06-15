@@ -212,6 +212,8 @@ protected:
     double sign(double x) { return x > 0 ? 1 : -1; }
 
     event_t async_work_group_copy(void * dst, void * src, size_t num_gentypes, event_t event) { return (event_t) 0; }
+    template <class TType >
+    void prefetch(TType * p, size_t num_gentypes) { }
 
     template <typename T>
     T cross(T a, T b) { return T(); }
