@@ -22,8 +22,6 @@
 namespace clever
 {
 
-//typedef std::auto_ptr
-
 struct context_settings
 {
 	context_settings(std::string const& platform_name = "",
@@ -61,6 +59,7 @@ struct context_settings
 
 struct source_modifier: public boost::noncopyable
 {
+	virtual ~source_modifier() {} 
 	virtual void modify(std::string & src) const = 0;
 };
 
