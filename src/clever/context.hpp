@@ -316,7 +316,7 @@ public:
 	 CL_MEM_READ_WRITE, // | CL_MEM_USE_HOST_PTR,
 	 handle.value_size * count, NULL, &ERROR ) );*/
 
-	std::auto_ptr<clever::ikernel_proxy> create(const std::string& name,
+	std::unique_ptr<clever::ikernel_proxy> create(const std::string& name,
 			const std::string& sources) const
 	{
 		//std::cout << "Compiling kernel " << name ;
@@ -411,7 +411,7 @@ public:
 
 		//std::cout << "Compile done" << std::endl;
 
-		return std::auto_ptr<clever::ikernel_proxy>(
+		return std::unique_ptr<clever::ikernel_proxy>(
 				new clever::kernel_proxy(name, program,
 						final_source_linebreak.str()));
 	}
@@ -630,7 +630,7 @@ private:
 	cl_command_queue queue_;
 	cl_device_id sub_dev_id_;
 
-	std::auto_ptr<cl_device_id> m_devices;
+	std::unique_ptr<cl_device_id> m_devices;
 
 	boost::ptr_vector<source_modifier> m_source_modifier;
 

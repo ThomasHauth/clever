@@ -59,7 +59,7 @@ public:
              icontext() {}
     virtual ~icontext() {}
 
-    virtual std::auto_ptr< clever::ikernel_proxy > create( const std::string& name,
+    virtual std::unique_ptr< clever::ikernel_proxy > create( const std::string& name,
     		const std::string& sources ) const = 0;
 
     virtual cl_event execute_params( kernel_parameter_list const& parameter,
