@@ -23,11 +23,13 @@ TEST( clever_benchmarks, benchmark_floatingpoint )
 
 	double d2 = 23.0f;
 
-	KERNEL2_CLASS( add_val , cl_mem, double  ,
-			__kernel void add_val( __global double * a, const double b )
-	{
-		a[ get_global_id( 0 ) ] += b;
-	}) ( context );
+	KERNEL_CLASS( add_val,
+		__kernel void add_val( __global double * a, const double b )
+		{
+			a[ get_global_id( 0 ) ] += b;
+		},
+	 	cl_mem, double
+ 	) ( context );
 
 	// run kernel
 	add_val.run( m1.range(), m1.get_mem(), d2 );
@@ -40,4 +42,3 @@ TEST( clever_benchmarks, benchmark_floatingpoint )
 		ASSERT_FLOAT_EQ( d2 + 1, v );
 	}
 }
-
