@@ -20,11 +20,11 @@ public:
 	{
 	}
 
-	KERNEL2_CLASS( add_val,  cl_mem, double ,
+	KERNEL_CLASS( add_val,
 			__kernel void add_val( __global double * a, const double b )
 	{
 		a[ get_global_id( 0 ) ] += b;
-	});
+	}, cl_mem, double);
 
 };
 
@@ -67,11 +67,11 @@ TEST( clever_kernels, test_run_kernel_in_method )
 	double d2 = 23.0f;
 
 	// will be defined as variable "add_val" method local
-	KERNEL2_CLASS( add_val,  cl_mem, double ,
+	KERNEL_CLASS( add_val,
 			__kernel void add_val( __global double * a, const double b )
 	{
 		a[ get_global_id( 0 ) ] += b;
-	})
+	}, cl_mem, double )
 	(context);
 
 

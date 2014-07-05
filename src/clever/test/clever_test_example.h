@@ -40,7 +40,7 @@ TEST( clever_example, kernel_run_on_data )
 	// this code fragment will also be compiled and syntax & type checked by gcc on the host side
 	// during compile time.
 	// During runtime, it will be handed to the OpenCL runtime for compilation.
-	KERNEL4_CLASS( computeMagnitude, cl_mem, cl_mem , cl_mem , cl_mem ,
+	KERNEL_CLASS( computeMagnitude,
 
 			double square( double a )
 			{
@@ -55,7 +55,7 @@ TEST( clever_example, kernel_run_on_data )
 			{
 				size_t gid = get_global_id( 0 );
 				vMag[gid] = sqrt( square( vX[ gid] ) + square( vX[ gid] ) + square( vX[ gid] ) );
-			})
+			}, cl_mem, cl_mem , cl_mem , cl_mem)
 	(contx);
 
 	// collection to hold the data items on the host side
